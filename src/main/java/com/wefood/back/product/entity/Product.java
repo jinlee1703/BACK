@@ -35,8 +35,7 @@ public class Product {
     private Integer price;
 
     @Builder
-    public Product(Long id, String name, String detail, Integer price) {
-        this.id = id;
+    public Product(String name, String detail, Integer price) {
         this.name = name;
         this.detail = detail;
         this.price = price;

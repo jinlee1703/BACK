@@ -49,9 +49,8 @@ public class Review {
     private Integer score;
 
     @Builder
-    public Review(Long id, Order order, Product product, String title, String content,
+    public Review(Order order, Product product, String title, String content,
         LocalDateTime registeredAt, Integer score) {
-        this.id = id;
         this.order = order;
         this.product = product;
         this.title = title;

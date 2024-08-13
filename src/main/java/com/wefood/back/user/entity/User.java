@@ -44,9 +44,8 @@ public class User {
     private String accountNumber;
 
     @Builder
-    public User(Long id, String phoneNumber, String password, String name, Boolean isSeller,
+    public User(String phoneNumber, String password, String name, Boolean isSeller,
         Boolean isResign, String accountNumber) {
-        this.id = id;
         this.phoneNumber = phoneNumber;
         this.password = password;
         this.name = name;
