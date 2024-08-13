@@ -16,12 +16,9 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 public class ImageServiceConfig {
-    @Value("${image.service.impl}")
-    private String imageServiceImpl;
     @Bean
     @ConditionalOnProperty(name = "image.service.impl", havingValue = "s3Service", matchIfMissing = true)
     public ImageService s3Service(AmazonS3Client amazonS3Client) {
-        System.out.println(imageServiceImpl);
         return new S3Service(amazonS3Client);
     }
 }
