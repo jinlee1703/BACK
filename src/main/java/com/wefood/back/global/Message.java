@@ -9,7 +9,7 @@ import lombok.ToString;
  * @author JBumLee
  * @version 2024/08/10
  */
-
+@Getter
 public class Message<T> {
     private int statusCode;
     private String message;
