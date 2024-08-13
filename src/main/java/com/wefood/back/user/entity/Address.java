@@ -41,8 +41,7 @@ public class Address {
     private String detail;
 
     @Builder
-    public Address(Long id, User user, String zoneNo, String address, String detail) {
-        this.id = id;
+    public Address(User user, String zoneNo, String address, String detail) {
         this.user = user;
         this.zoneNo = zoneNo;
         this.address = address;

@@ -36,8 +36,7 @@ public class Farm {
     private String detail;
 
     @Builder
-    public Farm(Long id, User user, String detail) {
-        this.id = id;
+    public Farm(User user, String detail) {
         this.user = user;
         this.detail = detail;
     }

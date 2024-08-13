@@ -28,8 +28,7 @@ public class Category {
     private String name;
 
     @Builder
-    public Category(Long id, String name) {
-        this.id = id;
+    public Category(String name) {
         this.name = name;
     }
 }

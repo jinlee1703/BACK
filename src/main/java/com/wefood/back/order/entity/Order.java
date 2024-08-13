@@ -55,10 +55,9 @@ public class Order {
     private LocalDateTime meetingAt;
 
     @Builder
-    public Order(Long id, OrderStatus orderStatus, Integer totalCost, LocalDate deliveryDate,
+    public Order(OrderStatus orderStatus, Integer totalCost, LocalDate deliveryDate,
         LocalDate orderDate, String invoiceNumber, String receiverName, String receiverAddress,
         String receiverPhoneNumber, LocalDateTime meetingAt) {
-        this.id = id;
         this.orderStatus = orderStatus;
         this.totalCost = totalCost;
         this.deliveryDate = deliveryDate;

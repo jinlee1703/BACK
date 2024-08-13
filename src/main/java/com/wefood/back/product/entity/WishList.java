@@ -40,8 +40,7 @@ public class WishList {
     private User user;
 
     @Builder
-    public WishList(Long id, Farm farm, Product product, User user) {
-        this.id = id;
+    public WishList(Farm farm, Product product, User user) {
         this.farm = farm;
         this.product = product;
         this.user = user;

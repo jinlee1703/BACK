@@ -52,7 +52,7 @@ public class Cart {
     @EqualsAndHashCode
     @Getter
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
-    private static class Pk implements Serializable {
+    public static class Pk implements Serializable {
 
         @Column(name = "product_id")
         private Long productId;

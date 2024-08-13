@@ -52,7 +52,7 @@ public class FarmImage {
     @EqualsAndHashCode
     @Getter
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
-    private static class Pk implements Serializable {
+    public static class Pk implements Serializable {
 
         @Column(name = "farm_id")
         private Long farmId;

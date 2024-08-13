@@ -44,9 +44,8 @@ public class Payment {
     private String type;
 
     @Builder
-    public Payment(Long id, Order order, LocalDateTime createdAt, String buyer, Integer cost,
+    public Payment(Order order, LocalDateTime createdAt, String buyer, Integer cost,
         String type) {
-        this.id = id;
         this.order = order;
         this.createdAt = createdAt;
         this.buyer = buyer;

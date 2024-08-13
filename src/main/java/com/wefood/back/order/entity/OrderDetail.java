@@ -42,8 +42,7 @@ public class OrderDetail {
     private Integer price;
 
     @Builder
-    public OrderDetail(Long id, Order order, Product product, Integer quantity, Integer price) {
-        this.id = id;
+    public OrderDetail(Order order, Product product, Integer quantity, Integer price) {
         this.order = order;
         this.product = product;
         this.quantity = quantity;

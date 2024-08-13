@@ -27,8 +27,7 @@ public class OrderStatus {
     private LocalDate createdDate;
 
     @Builder
-    public OrderStatus(String id, LocalDate createdDate) {
-        this.id = id;
+    public OrderStatus(LocalDate createdDate) {
         this.createdDate = createdDate;
     }
 }

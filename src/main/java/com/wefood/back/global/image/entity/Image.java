@@ -33,8 +33,7 @@ public class Image {
 
 
     @Builder
-    public Image(Long id, String name, String extension) {
-        this.id = id;
+    public Image(String name, String extension) {
         this.name = name;
         this.extension = extension;
     }
