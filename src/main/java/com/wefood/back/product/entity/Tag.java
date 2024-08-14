@@ -1,7 +1,5 @@
-package com.wefood.back.global.image.entity;
+package com.wefood.back.product.entity;
 
-
-import jakarta.persistence.Table;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -11,33 +9,26 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 /**
- * class: Image.
+ * class: Tag.
  *
  * @author JBumLee
- * @version 2024/08/13
+ * @version 2024/08/14
  */
 @Entity
-@Table(name = "images")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Image {
+public class Tag {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 100)
+    @Column(nullable = false, length = 10)
     private String name;
 
-    @Column(nullable = false, length = 6)
-    private String extension;
-
-
     @Builder
-    public Image(String name, String extension) {
+    public Tag(String name) {
         this.name = name;
-        this.extension = extension;
     }
 }

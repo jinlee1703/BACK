@@ -1,15 +1,23 @@
 package com.wefood.back.product.entity;
 
+
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.io.Serializable;
 
+/**
+ * class: ProductCategory.
+ *
+ * @author JBumLee
+ * @version 2024/08/14
+ */
 @Entity
+@Table(name = "product_categories")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "product_categories")
 public class ProductCategory {
+  
     @EmbeddedId
     private Pk pk;
 
@@ -19,6 +27,7 @@ public class ProductCategory {
 
     @ManyToOne
     @MapsId(value = "productId")
+
     private Product product;
 
     @Builder

@@ -1,12 +1,13 @@
-package com.wefood.back.global.image.entity;
+package com.wefood.back.farm.entity;
 
-
-import jakarta.persistence.Table;
+import com.wefood.back.user.entity.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,30 +15,29 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * class: Image.
+ * class: Farm.
  *
  * @author JBumLee
  * @version 2024/08/13
  */
 @Entity
-@Table(name = "images")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Image {
+public class Farm {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 100)
-    private String name;
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
-    @Column(nullable = false, length = 6)
-    private String extension;
-
+    @Column(nullable = false)
+    private String detail;
 
     @Builder
-    public Image(String name, String extension) {
-        this.name = name;
-        this.extension = extension;
+    public Farm(User user, String detail) {
+        this.user = user;
+        this.detail = detail;
     }
 }
