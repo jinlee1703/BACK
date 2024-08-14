@@ -47,7 +47,7 @@ public class User {
     }
 
     public UserGetResponse convertToUserGetResponse() {
-        return new UserGetResponse(this.phoneNumber, this.password, this.name, this.isSeller, this.isResign, this.accountNumber);
+        return new UserGetResponse(this.id, this.phoneNumber, this.password, this.name, this.isSeller, this.isResign, this.accountNumber);
     }
 
 }
