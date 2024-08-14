@@ -1,5 +1,6 @@
 package com.wefood.back.user.controller;
 
+import com.wefood.back.global.Message;
 import com.wefood.back.user.dto.request.UserCreateRequest;
 import com.wefood.back.user.dto.request.UserGetRequest;
 import com.wefood.back.user.dto.request.UserLoginRequest;
@@ -30,17 +31,21 @@ public class UserController {
 
 
     @PostMapping("/login")
-    public ResponseEntity<UserLoginResponse> loginUser(@RequestBody UserLoginRequest userLoginRequest) {
+    public ResponseEntity<Message> loginUser(@RequestBody UserLoginRequest userLoginRequest) {
 
         Optional<User> user = userService.loginUser(userLoginRequest);
 
-        return user.map(value -> new ResponseEntity<>(new UserLoginResponse(value.getIsSeller()), HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.OK));
+        if (user.isPresent()) {
+            UserLoginResponse userLoginResponse = new UserLoginResponse(user.get().getIsSeller());
+            return new ResponseEntity<>(new Message<>(200, "로그인 성공", userLoginResponse), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(new Message(200, "로그인 실패", null), HttpStatus.OK);
     }
 
     @GetMapping
-    public ResponseEntity<UserGetResponse> getUser(@RequestBody UserGetRequest getRequest) {
+    public ResponseEntity<Message> getUser(@RequestBody UserGetRequest getRequest) {
         UserGetResponse userGetResponse = userService.getUser(getRequest);
-        return new ResponseEntity<>(userGetResponse, HttpStatus.OK);
+        return new ResponseEntity<>(new Message<>(200, "조회완료", userGetResponse), HttpStatus.OK);
     }
 
 }
