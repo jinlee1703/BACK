@@ -5,11 +5,12 @@ import com.wefood.back.user.dto.request.UserGetRequest;
 import com.wefood.back.user.dto.request.UserLoginRequest;
 import com.wefood.back.user.dto.response.UserGetResponse;
 import com.wefood.back.user.entity.User;
-import com.wefood.back.user.exception.LoginFailException;
 import com.wefood.back.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Transactional
@@ -33,15 +34,13 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public void loginUser(UserLoginRequest loginRequest) {
+    public Optional<User> loginUser(UserLoginRequest loginRequest) {
 
-        if (!userRepository.existsByPhoneNumberAndPassword(loginRequest.phoneNumber(), loginRequest.password())) {
-            throw new LoginFailException();
-        }
+        return userRepository.findByPhoneNumberAndPassword(loginRequest.phoneNumber(),loginRequest.password());
     }
 
     public UserGetResponse getUser(UserGetRequest getRequest) {
-        User user = userRepository.findByPhoneNumberAndPassword(getRequest.phoneNumber(), getRequest.password());
+        User user = userRepository.findByPhoneNumberAndPassword(getRequest.phoneNumber(), getRequest.password()).get();
         return user.convertToUserGetResponse();
     }
 
