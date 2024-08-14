@@ -31,7 +31,7 @@ public class UserController {
 
 
     @PostMapping("/login")
-    public ResponseEntity<Message> loginUser(@RequestBody UserLoginRequest userLoginRequest) {
+    public ResponseEntity<Message<UserLoginResponse>> loginUser(@RequestBody UserLoginRequest userLoginRequest) {
 
         Optional<User> user = userService.loginUser(userLoginRequest);
 
@@ -42,8 +42,9 @@ public class UserController {
         return new ResponseEntity<>(new Message(200, "로그인 실패", null), HttpStatus.OK);
     }
 
-    @GetMapping
-    public ResponseEntity<Message> getUser(@RequestBody UserGetRequest getRequest) {
+    @PostMapping("/mypage")
+    public ResponseEntity<Message<UserGetResponse>> getUser(@RequestBody UserGetRequest getRequest) {
+
         UserGetResponse userGetResponse = userService.getUser(getRequest);
         return new ResponseEntity<>(new Message<>(200, "조회완료", userGetResponse), HttpStatus.OK);
     }
