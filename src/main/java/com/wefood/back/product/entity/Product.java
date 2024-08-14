@@ -1,23 +1,40 @@
 package com.wefood.back.product.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
+import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Getter
+/**
+ * class: Product.
+ *
+ * @author JBumLee
+ * @version 2024/08/13
+ */
 @Entity
 @Table(name = "products")
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false, length = 64)
     private String name;
 
+    @Column(nullable = false)
     private String detail;
 
-    private int price;
+    @Column(nullable = false)
+    private Integer price;
 
+    @Builder
+    public Product(String name, String detail, Integer price) {
+        this.name = name;
+        this.detail = detail;
+        this.price = price;
+    }
 }

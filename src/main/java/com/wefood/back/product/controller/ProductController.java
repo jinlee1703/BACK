@@ -2,17 +2,14 @@ package com.wefood.back.product.controller;
 
 
 import com.wefood.back.global.Message;
-import com.wefood.back.product.dto.ProductDetailResponseDto;
+import com.wefood.back.product.dto.ProductDetailResponse;
 import com.wefood.back.product.service.ProductService;
-import com.wefood.back.product.dto.ProductResponseDto;
+import com.wefood.back.product.dto.ProductResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -32,8 +29,8 @@ public class ProductController {
      * @return
      */
     @GetMapping
-    public ResponseEntity<Message<List<ProductResponseDto>>> getProducts() {
-        Message<List<ProductResponseDto>> message = new Message<>(200, "", productService.getProducts());
+    public ResponseEntity<Message<List<ProductResponse>>> getProducts() {
+        Message<List<ProductResponse>> message = new Message<>(200, "", productService.getProducts());
         return new ResponseEntity<>(message, HttpStatus.OK);
     }
 
@@ -44,8 +41,8 @@ public class ProductController {
      * @return
      */
     @GetMapping("/category/{categoryId}")
-    public ResponseEntity<Message<Page<ProductResponseDto>>> getProductByCategory(@PathVariable(name = "categoryId") Long categoryId, Pageable pageable) {
-        Message<Page<ProductResponseDto>> message = new Message<>(200, "", productService.getProductByCategory(categoryId, pageable));
+    public ResponseEntity<Message<Page<ProductResponse>>> getProductByCategory(@PathVariable(name = "categoryId") Long categoryId, Pageable pageable) {
+        Message<Page<ProductResponse>> message = new Message<>(200, "", productService.getProductByCategory(categoryId, pageable));
         return new ResponseEntity<>(message, HttpStatus.OK);
     }
 
@@ -56,8 +53,8 @@ public class ProductController {
      * @return
      */
     @GetMapping("/{productId}")
-    public ResponseEntity<Message<ProductDetailResponseDto>> getProduct(@PathVariable(name = "productId") Long productId) {
-        Message<ProductDetailResponseDto> message = new Message<>(200, "", productService.getProductDetail(productId));
+    public ResponseEntity<Message<ProductDetailResponse>> getProduct(@PathVariable(name = "productId") Long productId) {
+        Message<ProductDetailResponse> message = new Message<>(200, "", productService.getProductDetail(productId));
         return new ResponseEntity<>(message, HttpStatus.OK);
     }
 }

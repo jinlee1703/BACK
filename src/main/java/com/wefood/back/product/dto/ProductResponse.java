@@ -6,18 +6,24 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class ProductDetailResponseDto {
-
+public class ProductResponse {
     private Long id;
+
     private String name;
-    private String detail;
+
     private int price;
 
+    private String img;
+
     @Builder
-    public ProductDetailResponseDto(Long id, String name, String detail, int price) {
+    public ProductResponse(Long id, String name, int price, String img) {
         this.id = id;
         this.name = name;
-        this.detail = detail;
         this.price = price;
+        this.img = img;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
     }
 }
