@@ -1,15 +1,28 @@
 package com.wefood.back.global.image.service;
 
+import com.wefood.back.farm.entity.Farm;
+import com.wefood.back.farm.repository.FarmRepository;
+import com.wefood.back.global.image.entity.FarmImage;
+import com.wefood.back.global.image.entity.Image;
+import com.wefood.back.global.image.entity.ProductImage;
+import com.wefood.back.global.image.repository.FarmImageRepository;
+import com.wefood.back.global.image.repository.ImageRepository;
 import com.wefood.back.global.image.repository.ProductImageRepository;
+import com.wefood.back.global.type.ImageRootType;
 import com.wefood.back.product.dto.UploadImageRequestDto;
+import com.wefood.back.product.entity.Product;
+import com.wefood.back.product.repository.ProductRepository;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.channels.IllegalSelectorException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -34,10 +47,13 @@ import software.amazon.awssdk.services.s3.model.S3Exception;
 @RequiredArgsConstructor
 @Transactional
 @Slf4j
-public class S3Service implements ImageService{
+public class S3Service implements StorageService {
     private final S3Client s3Client;
+    private final ProductRepository productRepository;
+    private final FarmRepository farmRepository;
     private final ProductImageRepository productImageRepository;
-
+    private final FarmImageRepository farmImageRepository;
+    private final ImageRepository imageRepository;
     @Value("${cloud.aws.s3.bucketName}")
     private String bucket;
 
@@ -49,29 +65,95 @@ public class S3Service implements ImageService{
      * @throws IOException
      */
     @Override
-    public List<String> saveImages(UploadImageRequestDto uploadImageRequestDto, String dirName) throws IOException {
-        List<String> uploadImageUrls = new ArrayList<>();
+    public void saveImages(UploadImageRequestDto uploadImageRequestDto, String dirName) throws IOException {
         List<MultipartFile> multipartFiles = uploadImageRequestDto.getFiles();
-
         Long id = uploadImageRequestDto.getId();
+        List<Image> images = new ArrayList<>();
+        ImageRootType rootType= dbCheckRootType(dirName, uploadImageRequestDto.getId());
         for (MultipartFile multipartFile : multipartFiles) {
             File uploadFile = convert(multipartFile)  // 파일 변환할 수 없으면 에러
                 .orElseThrow(() -> new IllegalArgumentException("error: MultipartFile -> File convert fail"));
             String imageUrl = upload(uploadFile, dirName, id);
-            uploadImageUrls.add(imageUrl);
+            String extension = getFileExtension(imageUrl);
+            images.add(Image.builder().name(imageUrl).extension(extension).build());
         }
-//        productImageRepository.saveAll();
-        return uploadImageUrls;
+        imageRepository.saveAll(images);
+        saveTypeRepo(rootType,images);
+    }
+    private String getFileExtension(String fileName) {
+        if (fileName == null || fileName.isEmpty()) {
+            throw new IllegalArgumentException("Filename is null or empty.");
+        }
+        int lastDotIndex = fileName.lastIndexOf('.');
+        if (lastDotIndex == -1 || lastDotIndex == fileName.length() - 1) {
+            throw new IllegalArgumentException("No file extension found in " + fileName);
+        }
+        return fileName.substring(lastDotIndex + 1);
+    }
+    private ImageRootType dbCheckRootType(String dir, Long id){
+        if(dir.equals("farm")){
+            return farmRepository.findById(id).orElseThrow();
+        }else if(dir.equals("product")){
+            return productRepository.findById(id).orElseThrow();
+        }
+        throw new IllegalSelectorException();
+    }
+    private void saveTypeRepo(ImageRootType rootType, List<Image> images) {
+        if (rootType == null || images == null || images.isEmpty()) {
+            throw new IllegalArgumentException("Invalid input: rootType or images cannot be null or empty.");
+        }
+        if (rootType instanceof Farm farm) {
+            saveFarmImages(farm, images);
+        } else if (rootType instanceof Product product) {
+            saveProductImages(product, images);
+        } else {
+            throw new IllegalArgumentException("Unsupported ImageRootType: " + rootType.getClass().getName());
+        }
+    }
+
+    private void saveFarmImages(Farm farm, List<Image> images) {
+        List<FarmImage> farmImages = IntStream.range(0, images.size())
+            .mapToObj(index -> {
+                Image image = images.get(index);
+                Integer sequence = (Integer) (index + 1); // 예시로 sequence를 인덱스 기반으로 설정
+                return FarmImage.builder()
+                    .pk(FarmImage.Pk.builder()
+                        .farmId(farm.getId())
+                        .imageId(image.getId())
+                        .build())
+                    .sequence(sequence)  // sequence 값을 설정
+                    .build();
+            })
+            .collect(Collectors.toList());
+        farmImageRepository.saveAll(farmImages);
+    }
+
+    private void saveProductImages(Product product, List<Image> images) {
+        List<ProductImage> productImages = IntStream.range(0, images.size())
+            .mapToObj(index -> {
+                Image image = images.get(index);
+                Integer sequence = (Integer) (index + 1); // 예시로 sequence를 인덱스 기반으로 설정
+                return ProductImage.builder()
+                    .pk(ProductImage.Pk.builder()
+                        .productId(product.getId())
+                        .imageId(image.getId())
+                        .build())
+                    .sequence(sequence)  // sequence 값을 설정
+                    .isThumbnail(false)
+                    .build();
+            })
+            .collect(Collectors.toList());
+        productImageRepository.saveAll(productImages);
     }
     // S3로 파일 업로드하기
     private String upload(File uploadFile, String dirName, Long id) {
         // 폴더가 없으면 생성
         createDirIfNotExists(dirName);
 
-        String fileName = dirName + "/" + id + "/" + UUID.randomUUID() + uploadFile.getName(); // S3에 저장된 파일 이름
-        String uploadImageUrl = putS3(uploadFile, fileName); // s3로 업로드
+        String fileName = UUID.randomUUID() + uploadFile.getName(); // S3에 저장된 파일 이름
+        putS3(uploadFile,dirName + "/" + id + "/" +  fileName); // s3로 업로드
         removeNewFile(uploadFile);
-        return uploadImageUrl;
+        return fileName;
     }
 
     // 폴더가 존재하지 않으면 폴더 생성

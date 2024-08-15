@@ -12,6 +12,12 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * class: ProductRepository.
+ *
+ * @author JBumLee
+ * @version 2024/08/15
+ */
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Query("select new com.wefood.back.product.dto.ProductDetailResponse(p.id, p.name, p.detail, p.price, f.id, f.name) from Product p inner join FarmProducts fp on fp.pk.productId=p.id inner join Farm f on f.id=fp.pk.farmId where p.id=:productId")

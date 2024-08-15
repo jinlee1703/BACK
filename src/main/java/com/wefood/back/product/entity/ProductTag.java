@@ -27,11 +27,11 @@ public class ProductTag {
     private Pk pk;
 
     @ManyToOne
-    @JoinColumn(name = "productId", insertable = false, updatable = false)
+    @JoinColumn(name = "product_id", insertable = false, updatable = false)
     private Product product;
 
     @ManyToOne
-    @JoinColumn(name = "tagId", insertable = false, updatable = false)
+    @JoinColumn(name = "tag_id", insertable = false, updatable = false)
     private Tag tag;
 
     @Builder
