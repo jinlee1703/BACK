@@ -1,4 +1,4 @@
-package com.wefood.back.farm;
+package com.wefood.back.farm.controller;
 
 import com.wefood.back.global.exception.FileUploadException;
 import com.wefood.back.global.exception.InvalidRequestException;

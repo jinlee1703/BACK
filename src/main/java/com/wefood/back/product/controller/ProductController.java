@@ -1,10 +1,9 @@
 package com.wefood.back.product.controller;
 
-import com.wefood.back.global.Message;
 import com.wefood.back.global.exception.FileUploadException;
 import com.wefood.back.global.exception.InvalidRequestException;
 import com.wefood.back.product.dto.UploadImageRequestDto;
-import com.wefood.back.global.image.service.ImageService;
+import com.wefood.back.global.image.service.StorageService;
 import jakarta.validation.Valid;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/product")
 @RequiredArgsConstructor
 public class ProductController {
-    private final ImageService imageService;
+    private final StorageService storageService;
     private final static String DIR_NAME = "product";
 
     @ResponseStatus(HttpStatus.CREATED)
@@ -39,7 +38,7 @@ public class ProductController {
             throw new InvalidRequestException(result);
         }
         try {
-            imageService.saveImages(requestDto, DIR_NAME);
+            storageService.saveImages(requestDto, DIR_NAME);
         } catch (IOException e) {
             throw new FileUploadException("An error occurred while uploading files.", e);
         }
