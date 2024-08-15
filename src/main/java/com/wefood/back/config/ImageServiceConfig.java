@@ -19,7 +19,6 @@ public class ImageServiceConfig {
     @Bean
     @ConditionalOnProperty(name = "image.service.impl", havingValue = "s3Service", matchIfMissing = true)
     public ImageService s3Service(S3Client s3Client, ProductImageRepository productImageRepository) {
-
         return new S3Service(s3Client, productImageRepository);
     }
 }
