@@ -64,7 +64,7 @@ public class ProductController {
      * @return Page 별 검색 결과
      */
     @GetMapping("/search")
-    public ResponseEntity<Message<Page<ProductResponse>>> getProductBySearch(@RequestParam("search") String search, Pageable pageable) {
+    public ResponseEntity<Message<Page<ProductResponse>>> getProductBySearch(@RequestParam("searchWord") String search, Pageable pageable) {
         Page<ProductResponse> products;
         if (search.strip().startsWith("#")) {
             products = productService.getProductByTag(search, pageable);
