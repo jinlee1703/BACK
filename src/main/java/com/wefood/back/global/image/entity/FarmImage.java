@@ -40,6 +40,7 @@ public class FarmImage{
 
     @Column
     private Integer sequence;
+
     @Builder
     public FarmImage(Pk pk, Farm farm, Image image,Integer sequence) {
         this.pk = pk;
@@ -55,7 +56,7 @@ public class FarmImage{
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     public static class Pk implements Serializable {
 
-        @Column(name = "farm_id", insertable = false, updatable = false)
+        @Column(name = "farm_id")
         private Long farmId;
 
         @Column(name = "image_id")

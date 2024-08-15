@@ -1,15 +1,17 @@
 package com.wefood.back.global.exception;
 
 import com.wefood.back.global.Message;
-import java.util.HashMap;
-import java.util.Map;
+import com.wefood.back.product.exception.CategoryNotFoundException;
+import com.wefood.back.product.exception.ProductNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * class: GlobalExceptionHandler.
@@ -22,7 +24,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(InvalidRequestException.class)
     public ResponseEntity<Message<String>> handleInvalidRequest(InvalidRequestException e) {
-        Message<String> message = new Message<>(400, e.getMessage().toString());
+        Message<String> message = new Message<>(400, e.getMessage());
         return ResponseEntity.badRequest().body(message);
     }
 
@@ -42,6 +44,12 @@ public class GlobalExceptionHandler {
         });
         Message<Map<String, String>> message = new Message<>(400, "Validation failed", errors);
         return ResponseEntity.badRequest().body(message);
+    }
+
+    @ExceptionHandler({ProductNotFoundException.class, CategoryNotFoundException.class})
+    public ResponseEntity<Message<String>> handleNotFoundException(ProductNotFoundException e) {
+        Message<String> message = new Message<>(404, e.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
     }
 
     @ExceptionHandler(Exception.class)

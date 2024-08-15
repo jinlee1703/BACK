@@ -11,7 +11,6 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 /**
  * class: Product.
@@ -24,6 +23,7 @@ import lombok.Setter;
 @Table(name = "products")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Product implements ImageRootType {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

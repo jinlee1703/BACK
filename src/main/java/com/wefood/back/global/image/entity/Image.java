@@ -1,5 +1,7 @@
 package com.wefood.back.global.image.entity;
 
+
+import jakarta.persistence.Table;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -19,6 +21,7 @@ import lombok.Setter;
  * @version 2024/08/13
  */
 @Entity
+@Table(name = "images")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "images")

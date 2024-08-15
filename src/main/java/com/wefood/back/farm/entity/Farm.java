@@ -14,7 +14,6 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 /**
  * class: Farm.
@@ -36,10 +35,13 @@ public class Farm implements ImageRootType {
     private User user;
 
     @Column(nullable = false)
+    private String name;
+
+    @Column(nullable = false)
     private String detail;
 
     @Builder
-    public Farm(User user, String detail) {
+    public Farm(User user, String name, String detail) {
         this.user = user;
         this.detail = detail;
     }

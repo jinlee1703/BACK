@@ -20,9 +20,11 @@ import lombok.NoArgsConstructor;
  * @version 2024/08/14
  */
 @Entity
+@Table(name = "product_categories")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ProductCategory {
+
     @EmbeddedId
     private Pk pk;
 

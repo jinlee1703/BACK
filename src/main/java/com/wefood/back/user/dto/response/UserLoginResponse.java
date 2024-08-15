@@ -1,4 +1,4 @@
 package com.wefood.back.user.dto.response;
 
-public record UserLoginResponse (boolean isSeller){
+public record UserLoginResponse(Long id, boolean isSeller) {
 }
