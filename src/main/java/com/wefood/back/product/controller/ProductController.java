@@ -3,7 +3,8 @@ package com.wefood.back.product.controller;
 import com.wefood.back.global.Message;
 import com.wefood.back.global.exception.FileUploadException;
 import com.wefood.back.global.exception.InvalidRequestException;
-import com.wefood.back.global.image.service.ImageService;
+import com.wefood.back.product.dto.UploadImageRequestDto;
+import com.wefood.back.global.image.service.StorageService;
 import com.wefood.back.product.dto.ProductDetailResponse;
 import com.wefood.back.product.dto.ProductResponse;
 import com.wefood.back.product.dto.UploadImageRequestDto;
@@ -22,15 +23,15 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/product")
 public class ProductController {
+    private final StorageService storageService;
 
     private final ProductService productService;
-    private final ImageService imageService;
     private final static String DIR_NAME = "product";
     private final static String successMessage = "상품 조회 성공";
 
-    public ProductController(ProductService productService, ImageService imageService) {
+    public ProductController(ProductService productService, StorageService storageService) {
         this.productService = productService;
-        this.imageService = imageService;
+        this.storageService = storageService;
     }
 
     /**
@@ -86,7 +87,7 @@ public class ProductController {
         Message<ProductDetailResponse> message = new Message<>(200, successMessage, productService.getProductDetail(productId));
         return new ResponseEntity<>(message, HttpStatus.OK);
     }
-  
+
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public void uploadImages(
@@ -97,7 +98,7 @@ public class ProductController {
             throw new InvalidRequestException(result);
         }
         try {
-            imageService.saveImages(requestDto, DIR_NAME);
+            storageService.saveImages(requestDto, DIR_NAME);
         } catch (IOException e) {
             throw new FileUploadException("An error occurred while uploading files.", e);
         }

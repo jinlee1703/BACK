@@ -1,10 +1,18 @@
 package com.wefood.back.product.entity;
 
-
-import jakarta.persistence.*;
-import lombok.*;
-
+import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
+import jakarta.persistence.EmbeddedId;
+import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import java.io.Serializable;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 /**
  * class: ProductCategory.
@@ -17,17 +25,16 @@ import java.io.Serializable;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ProductCategory {
-  
+
     @EmbeddedId
     private Pk pk;
 
     @ManyToOne
-    @MapsId(value = "categoryId")
+    @JoinColumn(name = "category_id", insertable = false, updatable = false)
     private Category category;
 
     @ManyToOne
-    @MapsId(value = "productId")
-
+    @JoinColumn(name = "product_id", insertable = false, updatable = false)
     private Product product;
 
     @Builder

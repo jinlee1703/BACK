@@ -1,41 +1,52 @@
 package com.wefood.back.global.image.entity;
 
 import com.wefood.back.farm.entity.Farm;
-import jakarta.persistence.*;
-import lombok.*;
-
+import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
+import jakarta.persistence.EmbeddedId;
+import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import java.io.Serializable;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 /**
  * class: FarmImage.
  *
- * @author JBum
+ * @author JBumLee
  * @version 2024/08/13
  */
 @Entity
-@Table(name = "farm_images")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class FarmImage {
+@Table(name = "farm_images")
+public class FarmImage{
 
     @EmbeddedId
     private Pk pk;
 
     @ManyToOne
-    @MapsId("farmId")
-    @JoinColumn(name = "farm_id")
+    @JoinColumn(name = "farm_id", insertable = false, updatable = false)
     private Farm farm;
 
     @ManyToOne
-    @MapsId("imageId")
-    @JoinColumn(name = "image_id")
+    @JoinColumn(name = "image_id", insertable = false, updatable = false)
     private Image image;
 
+    @Column
+    private Integer sequence;
+
     @Builder
-    public FarmImage(Pk pk, Farm farm, Image image) {
+    public FarmImage(Pk pk, Farm farm, Image image,Integer sequence) {
         this.pk = pk;
         this.farm = farm;
         this.image = image;
+        this.sequence = sequence;
     }
 
 

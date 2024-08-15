@@ -1,7 +1,11 @@
 package com.wefood.back.product.entity;
 
-import jakarta.persistence.*;
-
+import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
+import jakarta.persistence.EmbeddedId;
+import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import java.io.Serializable;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -16,7 +20,6 @@ import lombok.NoArgsConstructor;
  * @version 2024/08/14
  */
 @Entity
-@Table(name = "product_tags")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ProductTag {
@@ -24,12 +27,10 @@ public class ProductTag {
     private Pk pk;
 
     @ManyToOne
-    @MapsId("productId")
     @JoinColumn(name = "product_id", insertable = false, updatable = false)
     private Product product;
 
     @ManyToOne
-    @MapsId("tagId")
     @JoinColumn(name = "tag_id", insertable = false, updatable = false)
     private Tag tag;
 
