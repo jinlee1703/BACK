@@ -16,7 +16,7 @@ public class ProductDetailResponse {
     private int price;
     private Long farmId;
     private String farmName;
-    private List<ProductImageResponse> img;
+    private List<ProductImageDetailResponse> img;
 
     @Builder
     public ProductDetailResponse(Long id, String name, String detail, int price, Long farmId, String farmName) {
@@ -28,7 +28,7 @@ public class ProductDetailResponse {
         this.farmName = farmName;
     }
 
-    public void setImg(List<ProductImageResponse> img) {
+    public void setImg(List<ProductImageDetailResponse> img) {
         this.img = img;
     }
 }
