@@ -1,39 +1,34 @@
-package com.wefood.back.product.entity;
-
+package com.wefood.back.farm.entity;
 
 import jakarta.persistence.*;
+import com.wefood.back.product.entity.Product;
 import lombok.*;
 
 import java.io.Serializable;
 
-/**
- * class: ProductCategory.
- *
- * @author JBumLee
- * @version 2024/08/14
- */
 @Entity
-@Table(name = "product_categories")
+@Table(name = "farm_products")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ProductCategory {
-  
+public class FarmProducts {
+
     @EmbeddedId
     private Pk pk;
 
     @ManyToOne
-    @MapsId(value = "categoryId")
-    private Category category;
+    @MapsId(value = "farmId")
+    @JoinColumn(name = "farm_id")
+    private Farm farm;
 
-    @ManyToOne
+    @OneToOne
     @MapsId(value = "productId")
-
+    @JoinColumn(name = "product_id")
     private Product product;
 
     @Builder
-    public ProductCategory(Pk pk, Category category, Product product) {
+    public FarmProducts(Pk pk, Farm farm, Product product) {
         this.pk = pk;
-        this.category = category;
+        this.farm = farm;
         this.product = product;
     }
 
@@ -42,17 +37,16 @@ public class ProductCategory {
     @Getter
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     public static class Pk implements Serializable {
-
         @Column(name = "product_id")
         private Long productId;
 
-        @Column(name = "category_id")
-        private Long categoryId;
+        @Column(name = "farm_id")
+        private Long farmId;
 
         @Builder
-        public Pk(Long productId, Long categoryId) {
+        public Pk(Long productId, Long farmId) {
             this.productId = productId;
-            this.categoryId = categoryId;
+            this.farmId = farmId;
         }
     }
 }
