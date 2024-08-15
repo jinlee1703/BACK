@@ -3,6 +3,7 @@ package com.wefood.back.global.exception;
 import com.wefood.back.global.Message;
 import com.wefood.back.product.exception.CategoryNotFoundException;
 import com.wefood.back.product.exception.ProductNotFoundException;
+import com.wefood.back.user.exception.UserNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -46,8 +47,8 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(message);
     }
 
-    @ExceptionHandler({ProductNotFoundException.class, CategoryNotFoundException.class})
-    public ResponseEntity<Message<String>> handleNotFoundException(ProductNotFoundException e) {
+    @ExceptionHandler({ProductNotFoundException.class, CategoryNotFoundException.class, UserNotFoundException.class})
+    public ResponseEntity<Message<String>> handleNotFoundException(RuntimeException e) {
         Message<String> message = new Message<>(404, e.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
     }
