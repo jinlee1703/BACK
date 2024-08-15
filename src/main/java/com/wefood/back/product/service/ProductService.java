@@ -76,7 +76,7 @@ public class ProductService {
      * @return Page 별 product
      */
     public Page<ProductResponse> getProductByCategory(Long categoryId, Pageable pageable) {
-        if (categoryRepository.existsById(categoryId)) {
+        if (!categoryRepository.existsById(categoryId)) {
             throw new CategoryNotFoundException();
         }
 
