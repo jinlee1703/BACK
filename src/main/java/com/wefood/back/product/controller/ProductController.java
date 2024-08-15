@@ -1,10 +1,10 @@
 package com.wefood.back.product.controller;
 
+import com.wefood.back.global.Message;
 import com.wefood.back.global.exception.FileUploadException;
 import com.wefood.back.global.exception.InvalidRequestException;
 import com.wefood.back.product.dto.UploadImageRequestDto;
 import com.wefood.back.global.image.service.StorageService;
-import com.wefood.back.global.image.service.ImageService;
 import com.wefood.back.product.dto.ProductDetailResponse;
 import com.wefood.back.product.dto.ProductResponse;
 import com.wefood.back.product.dto.UploadImageRequestDto;
@@ -29,9 +29,9 @@ public class ProductController {
     private final static String DIR_NAME = "product";
     private final static String successMessage = "상품 조회 성공";
 
-    public ProductController(ProductService productService, ImageService imageService) {
+    public ProductController(ProductService productService, StorageService storageService) {
         this.productService = productService;
-        this.imageService = imageService;
+        this.storageService = storageService;
     }
 
     /**

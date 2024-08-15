@@ -1,6 +1,7 @@
 package com.wefood.back.global.image.repository;
 
 import com.wefood.back.global.image.entity.ProductImage;
+import com.wefood.back.global.image.entity.ProductImage.Pk;
 import com.wefood.back.product.dto.ProductImageResponse;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
