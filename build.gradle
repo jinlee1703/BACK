@@ -20,7 +20,9 @@ configurations {
 repositories {
 	mavenCentral()
 }
-
+ext {
+	springCloudAwsVersion = '3.1.0'
+}
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
@@ -28,14 +30,14 @@ dependencies {
 	runtimeOnly 'com.mysql:mysql-connector-j'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
 	//AWS s3
-	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
-	implementation 'org.springframework.cloud:spring-cloud-starter-aws-messaging'
-	implementation 'org.springframework.cloud:spring-cloud-starter-aws-parameter-store-config'
+	implementation(platform("software.amazon.awssdk:bom:2.27.5"))
+	implementation("software.amazon.awssdk:s3")
+
 	//valid
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 }
-
 tasks.named('test') {
 	useJUnitPlatform()
 }
