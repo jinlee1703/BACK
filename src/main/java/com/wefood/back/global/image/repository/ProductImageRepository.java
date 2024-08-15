@@ -1,7 +1,7 @@
-package com.wefood.back.product.repository;
+package com.wefood.back.global.image.repository;
 
+import com.wefood.back.global.image.entity.ProductImage;
 import com.wefood.back.product.dto.ProductImageResponse;
-import com.wefood.back.product.entity.ProductImage;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

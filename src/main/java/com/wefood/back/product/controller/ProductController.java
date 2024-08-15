@@ -3,26 +3,20 @@ package com.wefood.back.product.controller;
 import com.wefood.back.global.Message;
 import com.wefood.back.global.exception.FileUploadException;
 import com.wefood.back.global.exception.InvalidRequestException;
-import com.wefood.back.product.dto.UploadImageRequestDto;
 import com.wefood.back.global.image.service.ImageService;
-import jakarta.validation.Valid;
-import java.io.IOException;
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
 import com.wefood.back.product.dto.ProductDetailResponse;
-import com.wefood.back.product.service.ProductService;
 import com.wefood.back.product.dto.ProductResponse;
+import com.wefood.back.product.dto.UploadImageRequestDto;
+import com.wefood.back.product.service.ProductService;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -41,7 +35,7 @@ public class ProductController {
     /**
      * 최신 상품 조회
      *
-     * @return
+     * @return 상품 정보
      */
     @GetMapping
     public ResponseEntity<Message<List<ProductResponse>>> getProducts() {
@@ -51,9 +45,9 @@ public class ProductController {
 
     /**
      * 카테고리별 상품 조회
-     * @param categoryId
-     * @param pageable
-     * @return
+     * @param categoryId 카테고리
+     * @param pageable Page
+     * @return Page별 카테고리
      */
     @GetMapping("/category/{categoryId}")
     public ResponseEntity<Message<Page<ProductResponse>>> getProductByCategory(@PathVariable(name = "categoryId") Long categoryId, Pageable pageable) {
@@ -64,8 +58,8 @@ public class ProductController {
     /**
      * 상품 상세 조회
      *
-     * @param productId
-     * @return
+     * @param productId 상품 번호
+     * @return 상품 상세 정보
      */
     @GetMapping("/{productId}")
     public ResponseEntity<Message<ProductDetailResponse>> getProduct(@PathVariable(name = "productId") Long productId) {

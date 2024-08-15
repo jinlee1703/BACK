@@ -18,7 +18,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     Optional<ProductDetailResponse> findProductDetailByProductId(@Param("productId") Long productId);
 
     @Query("select new com.wefood.back.product.dto.ProductResponse(p.id, p.name, p.price, i.name) from Product p inner join ProductImage pi on pi.pk.productId=p.id inner join Image i on pi.pk.imageId=i.id where pi.isThumbnail=true order by p.id desc limit 4")
-    List<ProductResponse> findTop5ByOrderByIdDesc();
+    List<ProductResponse> findTop4ByOrderByIdDesc();
 
     @Query("select new com.wefood.back.product.dto.ProductResponse(p.id, p.name, p.price, i.name) from Product p inner join ProductCategory c on p.id=c.pk.productId inner join ProductImage pi on pi.pk.productId=p.id inner join Image i on pi.pk.imageId=i.id where c.pk.categoryId=:categoryId and pi.isThumbnail=true")
     Page<ProductResponse> findProductByCategoryId(@Param("categoryId") Long id, Pageable pageable);

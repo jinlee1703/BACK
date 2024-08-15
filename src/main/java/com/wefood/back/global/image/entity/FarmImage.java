@@ -1,20 +1,10 @@
 package com.wefood.back.global.image.entity;
 
 import com.wefood.back.farm.entity.Farm;
-import jakarta.persistence.Column;
-import jakarta.persistence.Embeddable;
-import jakarta.persistence.EmbeddedId;
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.MapsId;
+import jakarta.persistence.*;
+import lombok.*;
+
 import java.io.Serializable;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 /**
  * class: FarmImage.
@@ -23,6 +13,7 @@ import lombok.Setter;
  * @version 2024/08/13
  */
 @Entity
+@Table(name = "farm_images")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class FarmImage {

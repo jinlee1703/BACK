@@ -1,18 +1,11 @@
 package com.wefood.back.farm.entity;
 
 import com.wefood.back.user.entity.User;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 /**
  * class: Farm.
@@ -21,6 +14,7 @@ import lombok.Setter;
  * @version 2024/08/13
  */
 @Entity
+@Table(name = "farms")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Farm {
@@ -33,10 +27,13 @@ public class Farm {
     private User user;
 
     @Column(nullable = false)
+    private String name;
+
+    @Column(nullable = false)
     private String detail;
 
     @Builder
-    public Farm(User user, String detail) {
+    public Farm(User user, String name, String detail) {
         this.user = user;
         this.detail = detail;
     }

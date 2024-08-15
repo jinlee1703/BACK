@@ -1,12 +1,8 @@
 package com.wefood.back.global.image.entity;
 
 import com.wefood.back.product.entity.Product;
-import jakarta.persistence.Column;
-import jakarta.persistence.Embeddable;
-import jakarta.persistence.EmbeddedId;
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
+
 import java.io.Serializable;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -21,6 +17,7 @@ import lombok.NoArgsConstructor;
  * @version 2024/08/14
  */
 @Entity
+@Table(name = "product_images")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ProductImage {
@@ -28,15 +25,17 @@ public class ProductImage {
     @EmbeddedId
     private Pk pk;
 
-    @Column(nullable = false)
+    @Column(name = "is_thumbnail", nullable = false)
     private Boolean isThumbnail;
 
     @ManyToOne
-    @JoinColumn(name = "productId", insertable = false, updatable = false)
+    @MapsId(value = "productId")
+    @JoinColumn(name = "product_id", insertable = false, updatable = false)
     private Product product;
 
     @ManyToOne
-    @JoinColumn(name = "imageId", insertable = false, updatable = false)
+    @MapsId(value = "imageId")
+    @JoinColumn(name = "image_id", insertable = false, updatable = false)
     private Image image;
 
     @Builder
