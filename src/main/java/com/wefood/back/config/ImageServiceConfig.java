@@ -1,12 +1,12 @@
 package com.wefood.back.config;
 
-import com.amazonaws.services.s3.AmazonS3Client;
+import com.wefood.back.global.image.repository.ProductImageRepository;
 import com.wefood.back.global.image.service.ImageService;
 import com.wefood.back.global.image.service.S3Service;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import software.amazon.awssdk.services.s3.S3Client;
 
 /**
  * class: ImageServiceConfig.
@@ -18,7 +18,7 @@ import org.springframework.context.annotation.Configuration;
 public class ImageServiceConfig {
     @Bean
     @ConditionalOnProperty(name = "image.service.impl", havingValue = "s3Service", matchIfMissing = true)
-    public ImageService s3Service(AmazonS3Client amazonS3Client) {
-        return new S3Service(amazonS3Client);
+    public ImageService s3Service(S3Client s3Client, ProductImageRepository productImageRepository) {
+        return new S3Service(s3Client, productImageRepository);
     }
 }
