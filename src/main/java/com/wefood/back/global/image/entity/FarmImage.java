@@ -7,44 +7,45 @@ import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.MapsId;
+import jakarta.persistence.Table;
 import java.io.Serializable;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 /**
  * class: FarmImage.
  *
- * @author JBum
+ * @author JBumLee
  * @version 2024/08/13
  */
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class FarmImage {
+@Table(name = "farm_images")
+public class FarmImage{
 
     @EmbeddedId
     private Pk pk;
 
     @ManyToOne
-    @MapsId("farmId")
-    @JoinColumn(name = "farm_id")
+    @JoinColumn(name = "farm_id", insertable = false, updatable = false)
     private Farm farm;
 
     @ManyToOne
-    @MapsId("imageId")
-    @JoinColumn(name = "image_id")
+    @JoinColumn(name = "image_id", insertable = false, updatable = false)
     private Image image;
 
+    @Column
+    private Integer sequence;
     @Builder
-    public FarmImage(Pk pk, Farm farm, Image image) {
+    public FarmImage(Pk pk, Farm farm, Image image,Integer sequence) {
         this.pk = pk;
         this.farm = farm;
         this.image = image;
+        this.sequence = sequence;
     }
 
 
@@ -54,7 +55,7 @@ public class FarmImage {
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     public static class Pk implements Serializable {
 
-        @Column(name = "farm_id")
+        @Column(name = "farm_id", insertable = false, updatable = false)
         private Long farmId;
 
         @Column(name = "image_id")

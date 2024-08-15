@@ -7,6 +7,7 @@ import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import java.io.Serializable;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -23,7 +24,8 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ProductImage {
+@Table(name = "product_images")
+public class ProductImage{
 
     @EmbeddedId
     private Pk pk;
@@ -32,19 +34,23 @@ public class ProductImage {
     private Boolean isThumbnail;
 
     @ManyToOne
-    @JoinColumn(name = "productId", insertable = false, updatable = false)
+    @JoinColumn(name = "product_id", insertable = false, updatable = false)
     private Product product;
 
     @ManyToOne
-    @JoinColumn(name = "imageId", insertable = false, updatable = false)
+    @JoinColumn(name = "image_id", insertable = false, updatable = false)
     private Image image;
 
+    @Column
+    private Integer sequence;
+
     @Builder
-    public ProductImage(Pk pk, Boolean isThumbnail, Product product, Image image) {
+    public ProductImage(Pk pk, Boolean isThumbnail, Product product, Image image,Integer sequence) {
         this.pk = pk;
         this.isThumbnail = isThumbnail;
         this.product = product;
         this.image = image;
+        this.sequence = sequence;
     }
 
 
