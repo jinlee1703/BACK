@@ -2,7 +2,7 @@ package com.wefood.back.farm;
 
 import com.wefood.back.global.exception.FileUploadException;
 import com.wefood.back.global.exception.InvalidRequestException;
-import com.wefood.back.global.image.service.ImageService;
+import com.wefood.back.global.image.service.StorageService;
 import com.wefood.back.product.dto.UploadImageRequestDto;
 import jakarta.validation.Valid;
 import java.io.IOException;
@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/farm")
 @RequiredArgsConstructor
 public class FarmController {
-    private final ImageService imageService;
+    private final StorageService storageService;
     private final static String DIR_NAME = "farm";
 
     @ResponseStatus(HttpStatus.CREATED)
@@ -39,7 +39,7 @@ public class FarmController {
         }
 
         try {
-            imageService.saveImages(requestDto, DIR_NAME);
+            storageService.saveImages(requestDto, DIR_NAME);
         } catch (IOException e) {
             throw new FileUploadException("An error occurred while uploading files.", e);
         }
