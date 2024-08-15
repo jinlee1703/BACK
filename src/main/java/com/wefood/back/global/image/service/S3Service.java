@@ -1,13 +1,11 @@
 package com.wefood.back.global.image.service;
 
-import com.amazonaws.services.s3.AmazonS3Client;
-import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.wefood.back.global.image.repository.ProductImageRepository;
 import com.wefood.back.product.dto.UploadImageRequestDto;
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -17,6 +15,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import software.amazon.awssdk.core.sync.RequestBody;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.HeadObjectRequest;
+import software.amazon.awssdk.services.s3.model.NoSuchKeyException;
+import software.amazon.awssdk.services.s3.model.PutObjectRequest;
+import software.amazon.awssdk.services.s3.model.S3Exception;
 
 /**
  * class: S3Service.
@@ -31,7 +35,8 @@ import org.springframework.web.multipart.MultipartFile;
 @Transactional
 @Slf4j
 public class S3Service implements ImageService{
-    private final AmazonS3Client amazonS3Client;
+    private final S3Client s3Client;
+    private final ProductImageRepository productImageRepository;
 
     @Value("${cloud.aws.s3.bucketName}")
     private String bucket;
@@ -47,6 +52,7 @@ public class S3Service implements ImageService{
     public List<String> saveImages(UploadImageRequestDto uploadImageRequestDto, String dirName) throws IOException {
         List<String> uploadImageUrls = new ArrayList<>();
         List<MultipartFile> multipartFiles = uploadImageRequestDto.getFiles();
+
         Long id = uploadImageRequestDto.getId();
         for (MultipartFile multipartFile : multipartFiles) {
             File uploadFile = convert(multipartFile)  // 파일 변환할 수 없으면 에러
@@ -54,7 +60,7 @@ public class S3Service implements ImageService{
             String imageUrl = upload(uploadFile, dirName, id);
             uploadImageUrls.add(imageUrl);
         }
-
+//        productImageRepository.saveAll();
         return uploadImageUrls;
     }
     // S3로 파일 업로드하기
@@ -70,21 +76,41 @@ public class S3Service implements ImageService{
 
     // 폴더가 존재하지 않으면 폴더 생성
     private void createDirIfNotExists(String dirName) {
-        if (!amazonS3Client.doesObjectExist(bucket, dirName + "/")) {
-            amazonS3Client.putObject(bucket, dirName + "/", new ByteArrayInputStream(new byte[0]), new ObjectMetadata());
-            log.info("Directory created: {}", dirName);
-        } else {
+        try {
+            HeadObjectRequest headObjectRequest = HeadObjectRequest.builder()
+                .bucket(bucket)
+                .key(dirName + "/")
+                .build();
+
+            s3Client.headObject(headObjectRequest);
             log.info("Directory already exists: {}", dirName);
+        } catch (NoSuchKeyException e) {
+            PutObjectRequest putObjectRequest = PutObjectRequest.builder()
+                .bucket(bucket)
+                .key(dirName + "/")
+                .build();
+
+            s3Client.putObject(putObjectRequest, RequestBody.empty());
+            log.info("Directory created: {}", dirName);
+        } catch (S3Exception e) {
+            log.error("Error occurred while checking or creating directory: {}", e.awsErrorDetails().errorMessage());
+            throw e;
         }
     }
 
     // S3로 업로드
     private String putS3(File uploadFile, String fileName) {
-        amazonS3Client.putObject(new PutObjectRequest(bucket, fileName, uploadFile));
-        return amazonS3Client.getUrl(bucket, fileName).toString();
+        PutObjectRequest putObjectRequest = PutObjectRequest.builder()
+            .bucket(bucket)
+            .key(fileName)
+            .build();
+
+        s3Client.putObject(putObjectRequest, RequestBody.fromFile(uploadFile));
+        URL url = s3Client.utilities().getUrl(builder -> builder.bucket(bucket).key(fileName));
+        return url.toString();
     }
 
-    // 로컬에 저장된 이미지 지우기
+// 로컬에 저장된 이미지 지우기
     private void removeNewFile(File targetFile) {
         if (targetFile.delete()) {
             log.info("File delete success");
