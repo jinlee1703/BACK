@@ -4,7 +4,9 @@ import com.wefood.back.user.dto.request.UserCreateRequest;
 import com.wefood.back.user.dto.request.UserGetRequest;
 import com.wefood.back.user.dto.request.UserLoginRequest;
 import com.wefood.back.user.dto.response.UserGetResponse;
+import com.wefood.back.user.entity.Address;
 import com.wefood.back.user.entity.User;
+import com.wefood.back.user.repository.AddressRepository;
 import com.wefood.back.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +21,7 @@ public class UserService {
 
     private final UserRepository userRepository;
 
+    private final AddressRepository addressRepository;
 
     public void createUser(UserCreateRequest createRequest) {
 
@@ -36,12 +39,20 @@ public class UserService {
 
     public Optional<User> loginUser(UserLoginRequest loginRequest) {
 
-        return userRepository.findByPhoneNumberAndPassword(loginRequest.phoneNumber(),loginRequest.password());
+        return userRepository.findByPhoneNumberAndPassword(loginRequest.phoneNumber(), loginRequest.password());
     }
 
     public UserGetResponse getUser(UserGetRequest getRequest) {
         User user = userRepository.findByPhoneNumberAndPassword(getRequest.phoneNumber(), getRequest.password()).get();
         return user.convertToUserGetResponse();
+    }
+
+    public Optional<Address> getAddress(Long id) {
+        return addressRepository.findByUserId(id);
+    }
+
+    public User findUser(Long id) {
+        return userRepository.findById(id).get();
     }
 
 }
