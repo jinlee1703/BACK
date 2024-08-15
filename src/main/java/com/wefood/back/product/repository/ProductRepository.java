@@ -28,4 +28,10 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Query("select new com.wefood.back.product.dto.ProductResponse(p.id, p.name, p.price, i.name) from Product p inner join ProductCategory c on p.id=c.pk.productId inner join ProductImage pi on pi.pk.productId=p.id inner join Image i on pi.pk.imageId=i.id where c.pk.categoryId=:categoryId and pi.isThumbnail=true")
     Page<ProductResponse> findProductByCategoryId(@Param("categoryId") Long id, Pageable pageable);
+
+    @Query("select new com.wefood.back.product.dto.ProductResponse(p.id, p.name, p.price, i.name) from Product p inner join ProductImage pi on pi.pk.productId=p.id inner join Image i on pi.pk.imageId=i.id where pi.isThumbnail=true and p.name like %:search%")
+    Page<ProductResponse> findByNameLike(@Param("search") String search, Pageable pageable);
+
+    @Query("select new com.wefood.back.product.dto.ProductResponse(p.id, p.name, p.price, i.name) from Product p inner join ProductImage pi on pi.pk.productId=p.id inner join Image i on pi.pk.imageId=i.id inner join ProductTag pt on pt.pk.productId=p.id inner join Tag t on t.id=pt.pk.tagId where pi.isThumbnail=true and t.name like :search")
+    Page<ProductResponse> findByTag(@Param("search") String search, Pageable pageable);
 }

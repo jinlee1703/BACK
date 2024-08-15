@@ -58,6 +58,25 @@ public class ProductController {
     }
 
     /**
+     * 검색어로 상품 조회(태그/상품 이름)
+     *
+     * @param search 검색어
+     * @param pageable Page
+     * @return Page 별 검색 결과
+     */
+    @GetMapping("/search")
+    public ResponseEntity<Message<Page<ProductResponse>>> getProductBySearch(@RequestParam("searchWord") String search, Pageable pageable) {
+        Page<ProductResponse> products;
+        if (search.strip().startsWith("#")) {
+            products = productService.getProductByTag(search, pageable);
+        } else {
+            products = productService.getProductBySearch(search, pageable);
+        }
+        Message<Page<ProductResponse>> message = new Message<>(200, successMessage, products);
+        return new ResponseEntity<>(message, HttpStatus.OK);
+    }
+
+    /**
      * 상품 상세 조회
      *
      * @param productId 상품 번호

@@ -2,7 +2,7 @@ package com.wefood.back.product.service;
 
 import com.wefood.back.global.image.repository.ProductImageRepository;
 import com.wefood.back.product.dto.ProductDetailResponse;
-import com.wefood.back.product.dto.ProductImageResponse;
+import com.wefood.back.product.dto.ProductImageDetailResponse;
 import com.wefood.back.product.dto.ProductResponse;
 import com.wefood.back.product.exception.CategoryNotFoundException;
 import com.wefood.back.product.exception.ProductNotFoundException;
@@ -46,8 +46,8 @@ public class ProductService {
         if (productDetailResponse.isEmpty()) {
             throw new ProductNotFoundException();
         }
-        List<ProductImageResponse> imageByProductId = productImageRepository.findImageByProductId(id);
-        for (ProductImageResponse response : imageByProductId) {
+        List<ProductImageDetailResponse> imageByProductId = productImageRepository.findImageByProductId(id);
+        for (ProductImageDetailResponse response : imageByProductId) {
             response.setName(imgRoute + "/" + bucketName + productURL + id + "/" + response.getName());
         }
         productDetailResponse.get().setImg(imageByProductId);
@@ -72,11 +72,11 @@ public class ProductService {
      * 카테고리별 상품 조회
      *
      * @param categoryId category
-     * @param pageable Page
+     * @param pageable   Page
      * @return Page 별 product
      */
     public Page<ProductResponse> getProductByCategory(Long categoryId, Pageable pageable) {
-        if (categoryRepository.existsById(categoryId)) {
+        if (!categoryRepository.existsById(categoryId)) {
             throw new CategoryNotFoundException();
         }
 
@@ -84,6 +84,24 @@ public class ProductService {
         for (ProductResponse product : products) {
             product.setImg(imgRoute + "/" + bucketName + productURL + product.getId() + "/" + product.getImg());
         }
+        return products;
+    }
+
+    public Page<ProductResponse> getProductBySearch(String search, Pageable pageable) {
+        Page<ProductResponse> products = productRepository.findByNameLike(search, pageable);
+        for (ProductResponse product : products) {
+            product.setImg(imgRoute + "/" + bucketName + productURL + product.getId() + "/" + product.getImg());
+        }
+
+        return products;
+    }
+
+    public Page<ProductResponse> getProductByTag(String search, Pageable pageable) {
+        Page<ProductResponse> products = productRepository.findByTag(search.replace("#", ""), pageable);
+        for (ProductResponse product : products) {
+            product.setImg(imgRoute + "/" + bucketName + productURL + product.getId() + "/" + product.getImg());
+        }
+
         return products;
     }
 }
