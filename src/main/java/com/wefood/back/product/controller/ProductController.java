@@ -26,6 +26,7 @@ public class ProductController {
     private final ProductService productService;
     private final ImageService imageService;
     private final static String DIR_NAME = "product";
+    private final static String successMessage = "상품 조회 성공";
 
     public ProductController(ProductService productService, ImageService imageService) {
         this.productService = productService;
@@ -39,7 +40,7 @@ public class ProductController {
      */
     @GetMapping
     public ResponseEntity<Message<List<ProductResponse>>> getProducts() {
-        Message<List<ProductResponse>> message = new Message<>(200, "", productService.getProducts());
+        Message<List<ProductResponse>> message = new Message<>(200, successMessage, productService.getProducts());
         return new ResponseEntity<>(message, HttpStatus.OK);
     }
 
@@ -51,7 +52,7 @@ public class ProductController {
      */
     @GetMapping("/category/{categoryId}")
     public ResponseEntity<Message<Page<ProductResponse>>> getProductByCategory(@PathVariable(name = "categoryId") Long categoryId, Pageable pageable) {
-        Message<Page<ProductResponse>> message = new Message<>(200, "", productService.getProductByCategory(categoryId, pageable));
+        Message<Page<ProductResponse>> message = new Message<>(200, successMessage, productService.getProductByCategory(categoryId, pageable));
         return new ResponseEntity<>(message, HttpStatus.OK);
     }
 
@@ -63,7 +64,7 @@ public class ProductController {
      */
     @GetMapping("/{productId}")
     public ResponseEntity<Message<ProductDetailResponse>> getProduct(@PathVariable(name = "productId") Long productId) {
-        Message<ProductDetailResponse> message = new Message<>(200, "", productService.getProductDetail(productId));
+        Message<ProductDetailResponse> message = new Message<>(200, successMessage, productService.getProductDetail(productId));
         return new ResponseEntity<>(message, HttpStatus.OK);
     }
   

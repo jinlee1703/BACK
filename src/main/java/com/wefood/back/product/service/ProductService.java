@@ -1,10 +1,12 @@
 package com.wefood.back.product.service;
 
+import com.wefood.back.global.image.repository.ProductImageRepository;
 import com.wefood.back.product.dto.ProductDetailResponse;
 import com.wefood.back.product.dto.ProductImageResponse;
 import com.wefood.back.product.dto.ProductResponse;
+import com.wefood.back.product.exception.CategoryNotFoundException;
 import com.wefood.back.product.exception.ProductNotFoundException;
-import com.wefood.back.global.image.repository.ProductImageRepository;
+import com.wefood.back.product.repository.CategoryRepository;
 import com.wefood.back.product.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -24,11 +26,13 @@ public class ProductService {
 
     private final ProductRepository productRepository;
     private final ProductImageRepository productImageRepository;
+    private final CategoryRepository categoryRepository;
 
 
-    public ProductService(ProductRepository productRepository, ProductImageRepository productImageRepository) {
+    public ProductService(ProductRepository productRepository, ProductImageRepository productImageRepository, CategoryRepository categoryRepository) {
         this.productRepository = productRepository;
         this.productImageRepository = productImageRepository;
+        this.categoryRepository = categoryRepository;
     }
 
     /**
@@ -72,6 +76,10 @@ public class ProductService {
      * @return Page 별 product
      */
     public Page<ProductResponse> getProductByCategory(Long categoryId, Pageable pageable) {
+        if (categoryRepository.existsById(categoryId)) {
+            throw new CategoryNotFoundException();
+        }
+
         Page<ProductResponse> products = productRepository.findProductByCategoryId(categoryId, pageable);
         for (ProductResponse product : products) {
             product.setImg(imgRoute + "/" + bucketName + productURL + product.getId() + "/" + product.getImg());
