@@ -1,18 +1,14 @@
 package com.wefood.back.order.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import com.wefood.back.user.entity.User;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * class: Order.
@@ -22,11 +18,17 @@ import lombok.NoArgsConstructor;
  */
 @Entity
 @Getter
+@Table(name = "orders")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @ManyToOne
     @JoinColumn(name = "status", nullable = false)
@@ -35,6 +37,7 @@ public class Order {
     @Column(nullable = false)
     private Integer totalCost;
 
+    @Column
     private LocalDate deliveryDate;
 
     @Column(nullable = false)
@@ -52,12 +55,14 @@ public class Order {
     @Column(nullable = false, length = 11)
     private String receiverPhoneNumber;
 
+    @Column
     private LocalDateTime meetingAt;
 
     @Builder
-    public Order(OrderStatus orderStatus, Integer totalCost, LocalDate deliveryDate,
-        LocalDate orderDate, String invoiceNumber, String receiverName, String receiverAddress,
-        String receiverPhoneNumber, LocalDateTime meetingAt) {
+    public Order(User user, OrderStatus orderStatus, Integer totalCost, LocalDate deliveryDate,
+                 LocalDate orderDate, String invoiceNumber, String receiverName, String receiverAddress,
+                 String receiverPhoneNumber, LocalDateTime meetingAt) {
+        this.user = user;
         this.orderStatus = orderStatus;
         this.totalCost = totalCost;
         this.deliveryDate = deliveryDate;
