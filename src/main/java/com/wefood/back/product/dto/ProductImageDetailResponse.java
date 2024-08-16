@@ -8,16 +8,18 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class ProductImageDetailResponse {
-    private String name;
+    private String img;
     private Boolean isThumbnail;
+    private Integer sequence;
 
     @Builder
-    public ProductImageDetailResponse(String name, Boolean isThumbnail) {
-        this.name = name;
+    public ProductImageDetailResponse(String img, Boolean isThumbnail, Integer sequence) {
+        this.img = img;
         this.isThumbnail = isThumbnail;
+        this.sequence = sequence;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setName(String img) {
+        this.img = img;
     }
 }
