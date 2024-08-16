@@ -63,4 +63,7 @@ public class Cart {
             this.userId = userId;
         }
     }
+    public void updateQuantity(Integer quantity) {
+        this.quantity = quantity;
+    }
 }

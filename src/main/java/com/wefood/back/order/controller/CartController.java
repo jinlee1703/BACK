@@ -1,14 +1,15 @@
 package com.wefood.back.order.controller;
 
 import com.wefood.back.global.Message;
+import com.wefood.back.global.exception.InvalidRequestException;
+import com.wefood.back.order.dto.CartProductRequest;
 import com.wefood.back.order.dto.CartProductResponse;
 import com.wefood.back.order.service.CartService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -27,5 +28,15 @@ public class CartController {
         List<CartProductResponse> cart = cartService.getCartByUserId(userId);
         Message<List<CartProductResponse>> message = new Message<>(200, "장바구니 조회 성공", cart);
         return new ResponseEntity<>(message, HttpStatus.OK);
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public void saveCart(@Valid @RequestBody CartProductRequest requestDto, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            throw new InvalidRequestException(bindingResult);
+        }
+
+        cartService.saveCartProduct(requestDto);
     }
 }
