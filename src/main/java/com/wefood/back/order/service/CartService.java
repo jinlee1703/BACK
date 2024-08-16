@@ -11,6 +11,7 @@ import com.wefood.back.product.repository.ProductRepository;
 import com.wefood.back.user.entity.User;
 import com.wefood.back.user.exception.UserNotFoundException;
 import com.wefood.back.user.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +24,11 @@ public class CartService {
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
 
+    private static final String imgRoute = "https://s3.ap-northeast-2.amazonaws.com";
+    private static final String productURL = "/product/";
+    @Value("${cloud.aws.s3.bucketName}")
+    private String bucketName;
+
     public CartService(CartRepository cartRepository, ProductRepository productRepository, UserRepository userRepository) {
         this.cartRepository = cartRepository;
         this.productRepository = productRepository;
@@ -34,7 +40,12 @@ public class CartService {
         if (!userRepository.existsById(userId)) {
             throw new UserNotFoundException();
         }
-        return productRepository.findCartProductByUserId(userId);
+        List<CartProductResponse> products = productRepository.findCartProductByUserId(userId);
+        for (CartProductResponse product : products) {
+            product.setThumbnail(imgRoute + "/" + bucketName + productURL + product.getId() + "/" + product.getThumbnail());
+        }
+
+        return products;
     }
 
     @Transactional

@@ -26,4 +26,8 @@ public class CartProductResponse {
         this.thumbnail = thumbnail;
         this.quantity = quantity;
     }
+
+    public void setThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
+    }
 }
