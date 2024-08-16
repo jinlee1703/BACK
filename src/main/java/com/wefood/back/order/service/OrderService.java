@@ -35,7 +35,6 @@ public class OrderService {
         User user = userRepository.findById(userId).get();
 
         // 직거래랑 , 온라인주문이랑 차이를 둬서 해야 함
-        // meetingAt 똑바로 컨버팅 안되는 문제가 있음
         // orderDetail 을 추가해야함
         Order order = Order.builder()
                 .user(user)
@@ -44,7 +43,7 @@ public class OrderService {
                 .orderDate(LocalDate.now())
                 .deliveryDate(orderCreateRequest.deliveryDate())
                 .invoiceNumber(orderCreateRequest.invoiceNumber())
-                .meetingAt(orderCreateRequest.metingAt())
+                .meetingAt(orderCreateRequest.meetingAt())
                 .receiverAddress(orderCreateRequest.receiverPhoneNumber())
                 .receiverName(orderCreateRequest.receiverName())
                 .receiverPhoneNumber(orderCreateRequest.receiverPhoneNumber())
