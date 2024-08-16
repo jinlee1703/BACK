@@ -3,6 +3,7 @@ package com.wefood.back.order.controller;
 
 import com.wefood.back.global.Message;
 import com.wefood.back.order.dto.request.OrderCreateRequest;
+import com.wefood.back.order.dto.response.OrderDetailGetResponse;
 import com.wefood.back.order.dto.response.OrderGetResponse;
 import com.wefood.back.order.service.OrderService;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +28,7 @@ public class OrderController {
     }
 
     @GetMapping("/{id}")
-    public Message<OrderGetResponse> getOrder(@PathVariable Long id) {
+    public Message<List<OrderDetailGetResponse>> getOrder(@PathVariable Long id) {
         return new Message<>(200,"주문조회",orderService.findOrder(id));
     }
 

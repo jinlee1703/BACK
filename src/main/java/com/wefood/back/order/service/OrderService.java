@@ -1,9 +1,11 @@
 package com.wefood.back.order.service;
 
 import com.wefood.back.order.dto.request.OrderCreateRequest;
+import com.wefood.back.order.dto.response.OrderDetailGetResponse;
 import com.wefood.back.order.dto.response.OrderGetResponse;
 import com.wefood.back.order.entity.Order;
 import com.wefood.back.order.entity.OrderStatus;
+import com.wefood.back.order.repository.OrderDetailRepository;
 import com.wefood.back.order.repository.OrderRepository;
 import com.wefood.back.order.repository.OrderStatusRepository;
 import com.wefood.back.user.entity.User;
@@ -22,6 +24,8 @@ public class OrderService {
 
     private final OrderStatusRepository orderStatusRepository;
 
+    private final OrderDetailRepository orderDetailRepository;
+
     private final UserRepository userRepository;
 
     public void createOrder(Long userId, OrderCreateRequest orderCreateRequest) {
@@ -32,6 +36,7 @@ public class OrderService {
 
         // 직거래랑 , 온라인주문이랑 차이를 둬서 해야 함
         // meetingAt 똑바로 컨버팅 안되는 문제가 있음
+        // orderDetail 을 추가해야함
         Order order = Order.builder()
                 .user(user)
                 .orderStatus(orderStatus)
@@ -51,8 +56,8 @@ public class OrderService {
         return orderRepository.findAllByUserId(userId);
     }
 
-    public OrderGetResponse findOrder(Long orderId) {
-        return orderRepository.findById(orderId);
+    public List<OrderDetailGetResponse> findOrder(Long orderId) {
+        return orderDetailRepository.findByOrderId(orderId);
     }
 
 }
