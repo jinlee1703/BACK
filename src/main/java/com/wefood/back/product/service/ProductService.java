@@ -48,7 +48,7 @@ public class ProductService {
         }
         List<ProductImageDetailResponse> imageByProductId = productImageRepository.findImageByProductId(id);
         for (ProductImageDetailResponse response : imageByProductId) {
-            response.setName(imgRoute + "/" + bucketName + productURL + id + "/" + response.getName());
+            response.setImg(imgRoute + "/" + bucketName + productURL + id + "/" + response.getImg());
         }
         productDetailResponse.get().setImg(imageByProductId);
 
