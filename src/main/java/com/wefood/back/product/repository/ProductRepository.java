@@ -21,7 +21,7 @@ import java.util.Optional;
  */
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
-    @Query("select new com.wefood.back.product.dto.ProductDetailResponse(p.id, p.name, p.detail, p.price, f.id, f.name) from Product p inner join FarmProducts fp on fp.pk.productId=p.id inner join Farm f on f.id=fp.pk.farmId where p.id=:productId")
+    @Query("select new com.wefood.back.product.dto.ProductDetailResponse(p.id, p.name, p.detail, p.price, f.id, f.name) from Product p inner join Farm f on f.id=p.farm.id where p.id=:productId")
     Optional<ProductDetailResponse> findProductDetailByProductId(@Param("productId") Long productId);
 
     @Query("select new com.wefood.back.product.dto.ProductResponse(p.id, p.name, p.price, i.name) from Product p inner join ProductImage pi on pi.pk.productId=p.id inner join Image i on pi.pk.imageId=i.id where pi.isThumbnail=true order by p.id desc limit 4")

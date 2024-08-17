@@ -1,5 +1,6 @@
 package com.wefood.back.order.entity;
 
+import com.wefood.back.farm.entity.Farm;
 import com.wefood.back.product.entity.Product;
 import com.wefood.back.user.entity.User;
 import jakarta.persistence.*;
@@ -30,6 +31,10 @@ public class Cart {
     private Integer quantity;
 
     @ManyToOne
+    @JoinColumn(name = "farm_id")
+    private Farm farm;
+
+    @ManyToOne
     @JoinColumn(name = "user_id", insertable = false, updatable = false)
     private User user;
 
@@ -38,11 +43,12 @@ public class Cart {
     private Product product;
 
     @Builder
-    public Cart(Pk pk, Integer quantity, Product product, User user) {
+    public Cart(Pk pk, Integer quantity, Product product, User user, Farm farm) {
         this.pk = pk;
         this.quantity = quantity;
         this.product = product;
         this.user = user;
+        this.farm = farm;
     }
 
     @Embeddable

@@ -1,12 +1,8 @@
 package com.wefood.back.product.entity;
 
+import com.wefood.back.farm.entity.Farm;
 import com.wefood.back.global.type.ImageRootType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -37,10 +33,15 @@ public class Product implements ImageRootType {
     @Column(nullable = false)
     private Integer price;
 
+    @ManyToOne
+    @JoinColumn(name = "farm_id")
+    private Farm farm;
+
     @Builder
-    public Product(String name, String detail, Integer price) {
+    public Product(String name, String detail, Integer price, Farm farm) {
         this.name = name;
         this.detail = detail;
         this.price = price;
+        this.farm = farm;
     }
 }
