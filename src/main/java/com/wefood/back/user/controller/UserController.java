@@ -41,7 +41,7 @@ public class UserController {
         Optional<User> user = userService.loginUser(userLoginRequest);
 
         if (user.isPresent()) {
-            UserLoginResponse userLoginResponse = new UserLoginResponse(user.get().getId(), user.get().getIsSeller());
+            UserLoginResponse userLoginResponse = new UserLoginResponse(user.get().getName(), user.get().getId(), user.get().getIsSeller());
             return new ResponseEntity<>(new Message<>(200, "로그인 성공", userLoginResponse), HttpStatus.OK);
         }
         return new ResponseEntity<>(new Message(200, "로그인 실패", null), HttpStatus.OK);
@@ -69,7 +69,7 @@ public class UserController {
 
     @PostMapping("/{id}/address")
     @ResponseStatus(HttpStatus.OK)
-    public void createAddress(@RequestBody AddressRequest addressRequest,@PathVariable Long id) {
+    public void createAddress(@RequestBody AddressRequest addressRequest, @PathVariable Long id) {
         User user = userService.findUser(id);
         addressRepository.save(new Address(user, addressRequest.zoneNumber(), addressRequest.address(), addressRequest.detail()));
     }
