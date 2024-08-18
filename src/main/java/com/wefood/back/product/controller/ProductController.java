@@ -3,7 +3,6 @@ package com.wefood.back.product.controller;
 import com.wefood.back.global.Message;
 import com.wefood.back.global.exception.FileUploadException;
 import com.wefood.back.global.exception.InvalidRequestException;
-import com.wefood.back.product.dto.UploadImageRequestDto;
 import com.wefood.back.global.image.service.StorageService;
 import com.wefood.back.product.dto.ProductDetailResponse;
 import com.wefood.back.product.dto.ProductResponse;
