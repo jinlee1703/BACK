@@ -41,12 +41,16 @@ public class FarmImage{
     @Column
     private Integer sequence;
 
+    @Column(nullable = false, name = "is_thumbnail")
+    private Boolean isThumbnail;
+
     @Builder
-    public FarmImage(Pk pk, Farm farm, Image image,Integer sequence) {
+    public FarmImage(Pk pk, Farm farm, Image image,Integer sequence, Boolean isThumbnail) {
         this.pk = pk;
         this.farm = farm;
         this.image = image;
         this.sequence = sequence;
+        this.isThumbnail = isThumbnail;
     }
 
 
