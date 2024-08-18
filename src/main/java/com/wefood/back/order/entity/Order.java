@@ -52,6 +52,9 @@ public class Order {
     @Column(length = 100)
     private String receiverAddress;
 
+    @Column(length = 100)
+    private String receiverAddressDetail;
+
     @Column(nullable = false, length = 11)
     private String receiverPhoneNumber;
 
@@ -61,7 +64,7 @@ public class Order {
     @Builder
     public Order(User user, OrderStatus orderStatus, Integer totalCost, LocalDate deliveryDate,
                  LocalDate orderDate, String invoiceNumber, String receiverName, String receiverAddress,
-                 String receiverPhoneNumber, LocalDateTime meetingAt) {
+                 String receiverAddressDetail, String receiverPhoneNumber, LocalDateTime meetingAt) {
         this.user = user;
         this.orderStatus = orderStatus;
         this.totalCost = totalCost;
@@ -70,6 +73,7 @@ public class Order {
         this.invoiceNumber = invoiceNumber;
         this.receiverName = receiverName;
         this.receiverAddress = receiverAddress;
+        this.receiverAddressDetail = receiverAddressDetail;
         this.receiverPhoneNumber = receiverPhoneNumber;
         this.meetingAt = meetingAt;
     }
