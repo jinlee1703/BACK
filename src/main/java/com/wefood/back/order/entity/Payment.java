@@ -34,9 +34,6 @@ public class Payment {
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
-    @Column(nullable = false, length = 30)
-    private String buyer;
-
     @Column(nullable = false)
     private Integer cost;
 
@@ -44,11 +41,10 @@ public class Payment {
     private String type;
 
     @Builder
-    public Payment(Order order, LocalDateTime createdAt, String buyer, Integer cost,
+    public Payment(Order order, LocalDateTime createdAt, Integer cost,
         String type) {
         this.order = order;
         this.createdAt = createdAt;
-        this.buyer = buyer;
         this.cost = cost;
         this.type = type;
     }

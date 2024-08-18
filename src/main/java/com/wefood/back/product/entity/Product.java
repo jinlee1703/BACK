@@ -37,11 +37,15 @@ public class Product implements ImageRootType {
     @JoinColumn(name = "farm_id")
     private Farm farm;
 
+    @Column(nullable = false)
+    private Boolean isStatus;
+
     @Builder
-    public Product(String name, String detail, Integer price, Farm farm) {
+    public Product(String name, String detail, Integer price, Farm farm, Boolean isStatus) {
         this.name = name;
         this.detail = detail;
         this.price = price;
         this.farm = farm;
+        this.isStatus = isStatus;
     }
 }
