@@ -19,7 +19,7 @@ public class ProductImageDetailResponse {
         this.sequence = sequence;
     }
 
-    public void setImg(String img) {
+    public void setName(String img) {
         this.img = img;
     }
 }

@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -41,6 +42,7 @@ public class ProductService {
      * @param id productId
      * @return ProductDetailResponseDto
      */
+    @Transactional(readOnly = true)
     public ProductDetailResponse getProductDetail(Long id) {
         Optional<ProductDetailResponse> productDetailResponse = productRepository.findProductDetailByProductId(id);
         if (productDetailResponse.isEmpty()) {
@@ -48,7 +50,7 @@ public class ProductService {
         }
         List<ProductImageDetailResponse> imageByProductId = productImageRepository.findImageByProductId(id);
         for (ProductImageDetailResponse response : imageByProductId) {
-            response.setImg(imgRoute + "/" + bucketName + productURL + id + "/" + response.getImg());
+            response.setName(imgRoute + "/" + bucketName + productURL + id + "/" + response.getImg());
         }
         productDetailResponse.get().setImg(imageByProductId);
 
@@ -60,6 +62,7 @@ public class ProductService {
      *
      * @return product list
      */
+    @Transactional(readOnly = true)
     public List<ProductResponse> getProducts() {
         List<ProductResponse> products = productRepository.findTop4ByOrderByIdDesc();
         for (ProductResponse product : products) {
@@ -75,6 +78,7 @@ public class ProductService {
      * @param pageable   Page
      * @return Page 별 product
      */
+    @Transactional(readOnly = true)
     public Page<ProductResponse> getProductByCategory(Long categoryId, Pageable pageable) {
         if (!categoryRepository.existsById(categoryId)) {
             throw new CategoryNotFoundException();
@@ -87,6 +91,7 @@ public class ProductService {
         return products;
     }
 
+    @Transactional(readOnly = true)
     public Page<ProductResponse> getProductBySearch(String search, Pageable pageable) {
         Page<ProductResponse> products = productRepository.findByNameLike(search, pageable);
         for (ProductResponse product : products) {
@@ -96,6 +101,7 @@ public class ProductService {
         return products;
     }
 
+    @Transactional(readOnly = true)
     public Page<ProductResponse> getProductByTag(String search, Pageable pageable) {
         Page<ProductResponse> products = productRepository.findByTag(search.replace("#", ""), pageable);
         for (ProductResponse product : products) {
