@@ -1,18 +1,14 @@
 package com.wefood.back.order.entity;
 
 import com.wefood.back.product.entity.Product;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import java.time.LocalDateTime;
+import com.wefood.back.user.entity.User;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
 
 /**
  * class: Review.
@@ -22,6 +18,7 @@ import lombok.NoArgsConstructor;
  */
 @Entity
 @Getter
+@Table(name = "reviews")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Review {
     @Id
@@ -29,12 +26,16 @@ public class Review {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "order_id", nullable = false)
-    private Order order;
+    @JoinColumn(name = "order_detail_id", nullable = false)
+    private OrderDetail orderDetail;
 
     @ManyToOne
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     @Column(nullable = false, length = 50)
     private String title;
@@ -49,9 +50,10 @@ public class Review {
     private Integer score;
 
     @Builder
-    public Review(Order order, Product product, String title, String content,
-        LocalDateTime registeredAt, Integer score) {
-        this.order = order;
+    public Review(OrderDetail orderDetail, Product product, User user, String title, String content,
+                  LocalDateTime registeredAt, Integer score) {
+        this.orderDetail = orderDetail;
+        this.user = user;
         this.product = product;
         this.title = title;
         this.content = content;
