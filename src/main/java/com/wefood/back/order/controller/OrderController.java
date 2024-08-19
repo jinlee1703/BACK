@@ -2,6 +2,7 @@ package com.wefood.back.order.controller;
 
 
 import com.wefood.back.global.Message;
+import com.wefood.back.order.dto.request.BasketOrderRequest;
 import com.wefood.back.order.dto.request.DirectOrderCreateRequest;
 import com.wefood.back.order.dto.response.OrderDetailGetResponse;
 import com.wefood.back.order.dto.response.OrderGetResponse;
@@ -25,6 +26,12 @@ public class OrderController {
     @ResponseStatus(HttpStatus.CREATED)
     public void createOrder(@PathVariable Long userId, @RequestBody DirectOrderCreateRequest orderCreateRequest) {
         orderService.createOrder(userId,orderCreateRequest);
+    }
+
+    @PostMapping("/{userId}/basket")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void createBasketOrder(@PathVariable Long userId, @RequestBody BasketOrderRequest basketOrderRequest) {
+        orderService.createBasketOrder(userId,basketOrderRequest);
     }
 
     @GetMapping("/{id}")

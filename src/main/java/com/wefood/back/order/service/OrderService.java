@@ -1,6 +1,10 @@
 package com.wefood.back.order.service;
 
+import com.wefood.back.order.dto.CartProductResponse;
+import com.wefood.back.order.dto.request.BasketOrderRequest;
+import com.wefood.back.order.dto.request.CartRequest;
 import com.wefood.back.order.dto.request.DirectOrderCreateRequest;
+import com.wefood.back.order.dto.request.OrderCreateRequest;
 import com.wefood.back.order.dto.response.OrderDetailGetResponse;
 import com.wefood.back.order.dto.response.OrderGetResponse;
 import com.wefood.back.order.entity.Order;
@@ -79,6 +83,66 @@ public class OrderService {
         Product product = productRepository.findById(orderCreateRequest.productId()).get();
         OrderDetail orderDetail = new OrderDetail(createOrder, product, orderCreateRequest.quantity(), orderCreateRequest.price());
         orderDetailRepository.save(orderDetail);
+    }
+
+    public void createBasketOrder(Long userId, BasketOrderRequest basketOrderRequest) {
+
+        OrderStatus orderStatus = orderStatusRepository.findById("주문완료").get();
+
+        User user = userRepository.findById(userId).get();
+
+        // 직거래랑 , 온라인주문이랑 차이를 둬서 해야 함
+        // orderDetail 을 추가해야함
+
+        Order order;
+
+        OrderCreateRequest orderCreateRequest = basketOrderRequest.orderCreateRequest();
+
+        if (orderCreateRequest.deliveryDate() != null) {
+            order = Order.builder()
+                    .user(user)
+                    .orderStatus(orderStatus)
+                    .totalCost(orderCreateRequest.totalCost())
+                    .orderDate(LocalDate.now())
+                    .deliveryDate(orderCreateRequest.deliveryDate().plusDays(3L))
+                    .invoiceNumber(orderCreateRequest.invoiceNumber())
+                    .meetingAt(orderCreateRequest.meetingAt())
+                    .receiverAddress(orderCreateRequest.receiverAddress())
+                    .receiverAddressDetail(orderCreateRequest.receiverAddressDetail())
+                    .receiverName(orderCreateRequest.receiverName())
+                    .receiverPhoneNumber(orderCreateRequest.receiverPhoneNumber())
+                    .build();
+        } else {
+            order = Order.builder()
+                    .user(user)
+                    .orderStatus(orderStatus)
+                    .totalCost(orderCreateRequest.totalCost())
+                    .orderDate(LocalDate.now())
+                    .deliveryDate(null)
+                    .invoiceNumber(orderCreateRequest.invoiceNumber())
+                    .meetingAt(orderCreateRequest.meetingAt())
+                    .receiverAddress(orderCreateRequest.receiverAddress())
+                    .receiverAddressDetail(orderCreateRequest.receiverAddressDetail())
+                    .receiverName(orderCreateRequest.receiverName())
+                    .receiverPhoneNumber(orderCreateRequest.receiverPhoneNumber())
+                    .build();
+        }
+
+
+        Order createOrder = orderRepository.save(order);
+
+        for (int i = 0; i < basketOrderRequest.farms().size(); i++) {
+
+            CartRequest cartRequest = basketOrderRequest.farms().get(i);
+
+            for (int j = 0; j < cartRequest.products().size(); j++) {
+                CartProductResponse cartProductResponse = cartRequest.products().get(j);
+                Product product = productRepository.findById(cartProductResponse.getId()).get();
+                OrderDetail orderDetail = new OrderDetail(createOrder, product, cartProductResponse.getQuantity(), cartProductResponse.getPrice());
+                orderDetailRepository.save(orderDetail);
+            }
+        }
+
     }
 
     public List<OrderGetResponse> findOrderList(Long userId) {
