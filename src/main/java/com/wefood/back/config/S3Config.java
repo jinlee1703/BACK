@@ -34,4 +34,11 @@ public class S3Config {
             .forcePathStyle(true)
             .build();
     }
+
+//    @Bean
+//    public SsmClient ssmClient() {
+//        return SsmClient.builder()
+//            .region(Region.AP_NORTHEAST_2) // 원하는 리전으로 교체
+//            .build();
+//    }
 }
