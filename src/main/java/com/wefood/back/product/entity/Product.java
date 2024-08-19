@@ -40,12 +40,17 @@ public class Product implements ImageRootType {
     @Column(nullable = false)
     private Boolean isStatus;
 
+    @ManyToOne
+    @JoinColumn(name = "item_id")
+    private Item item;
+
     @Builder
-    public Product(String name, String detail, Integer price, Farm farm, Boolean isStatus) {
+    public Product(String name, String detail, Integer price, Farm farm, Boolean isStatus, Item item) {
         this.name = name;
         this.detail = detail;
         this.price = price;
         this.farm = farm;
         this.isStatus = isStatus;
+        this.item = item;
     }
 }
