@@ -12,4 +12,6 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
 
     ReviewGetResponse queryById(Long id);
 
+    List<ReviewGetResponse> queryByProductId(Long orderId);
+
 }
