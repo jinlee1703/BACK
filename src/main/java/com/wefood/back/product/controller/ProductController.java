@@ -3,10 +3,11 @@ package com.wefood.back.product.controller;
 import com.wefood.back.global.Message;
 import com.wefood.back.global.exception.FileUploadException;
 import com.wefood.back.global.exception.InvalidRequestException;
+import com.wefood.back.global.image.dto.UploadThumbnailRequestDto;
 import com.wefood.back.global.image.service.StorageService;
 import com.wefood.back.product.dto.ProductDetailResponse;
 import com.wefood.back.product.dto.ProductResponse;
-import com.wefood.back.product.dto.UploadImageRequestDto;
+import com.wefood.back.global.image.dto.UploadImageRequestDto;
 import com.wefood.back.product.service.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
@@ -98,6 +99,22 @@ public class ProductController {
         }
         try {
             storageService.saveImages(requestDto, DIR_NAME);
+        } catch (IOException e) {
+            throw new FileUploadException("An error occurred while uploading files.", e);
+        }
+    }
+
+    @ResponseStatus(HttpStatus.CREATED)
+    @PostMapping("/thumbnail")
+    public void uploadThumbnail(
+        @Valid @ModelAttribute UploadThumbnailRequestDto requestDto,
+        BindingResult result) {
+        if (result.hasErrors()) {
+            throw new InvalidRequestException(result);
+        }
+
+        try {
+            storageService.saveThumbnail(requestDto, DIR_NAME);
         } catch (IOException e) {
             throw new FileUploadException("An error occurred while uploading files.", e);
         }

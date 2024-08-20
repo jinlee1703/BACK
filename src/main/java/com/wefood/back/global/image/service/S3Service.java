@@ -2,6 +2,7 @@ package com.wefood.back.global.image.service;
 
 import com.wefood.back.farm.entity.Farm;
 import com.wefood.back.farm.repository.FarmRepository;
+import com.wefood.back.global.image.dto.UploadThumbnailRequestDto;
 import com.wefood.back.global.image.entity.FarmImage;
 import com.wefood.back.global.image.entity.Image;
 import com.wefood.back.global.image.entity.ProductImage;
@@ -9,7 +10,7 @@ import com.wefood.back.global.image.repository.FarmImageRepository;
 import com.wefood.back.global.image.repository.ImageRepository;
 import com.wefood.back.global.image.repository.ProductImageRepository;
 import com.wefood.back.global.type.ImageRootType;
-import com.wefood.back.product.dto.UploadImageRequestDto;
+import com.wefood.back.global.image.dto.UploadImageRequestDto;
 import com.wefood.back.product.entity.Product;
 import com.wefood.back.product.repository.ProductRepository;
 import java.io.File;
@@ -78,8 +79,36 @@ public class S3Service implements StorageService {
             images.add(Image.builder().name(imageUrl).extension(extension).build());
         }
         imageRepository.saveAll(images);
-        saveTypeRepo(rootType,images);
+        saveImageTypeRepo(rootType,images);
     }
+
+    @Override
+    public void saveThumbnail(UploadThumbnailRequestDto uploadThumbnailRequestDto, String dirName)
+        throws IOException {
+        Long id = uploadThumbnailRequestDto.getId();
+        ImageRootType rootType= dbCheckRootType(dirName, uploadThumbnailRequestDto.getId());
+            File uploadFile = convert(uploadThumbnailRequestDto.getFiles())  // 파일 변환할 수 없으면 에러
+                .orElseThrow(() -> new IllegalArgumentException("error: MultipartFile -> File convert fail"));
+        String imageUrl = upload(uploadFile, dirName, id);
+        String extension = getFileExtension(imageUrl);
+        Image image = Image.builder().name(imageUrl).extension(extension).build();
+        imageRepository.save(image);
+        saveThumbnailTypeRepo(rootType,image);
+    }
+
+    private void saveThumbnailTypeRepo(ImageRootType rootType, Image image) {
+        if (rootType == null || image == null) {
+            throw new IllegalArgumentException("Invalid input: rootType or images cannot be null or empty.");
+        }
+        if (rootType instanceof Farm farm) {
+            saveFarmImages(farm, List.of(image),true);
+        } else if (rootType instanceof Product product) {
+            saveProductImages(product, List.of(image),true);
+        } else {
+            throw new IllegalArgumentException("Unsupported ImageRootType: " + rootType.getClass().getName());
+        }
+    }
+
     private String getFileExtension(String fileName) {
         if (fileName == null || fileName.isEmpty()) {
             throw new IllegalArgumentException("Filename is null or empty.");
@@ -98,38 +127,38 @@ public class S3Service implements StorageService {
         }
         throw new IllegalSelectorException();
     }
-    private void saveTypeRepo(ImageRootType rootType, List<Image> images) {
+    private void saveImageTypeRepo(ImageRootType rootType, List<Image> images) {
         if (rootType == null || images == null || images.isEmpty()) {
             throw new IllegalArgumentException("Invalid input: rootType or images cannot be null or empty.");
         }
         if (rootType instanceof Farm farm) {
-            saveFarmImages(farm, images);
+            saveFarmImages(farm, images,false);
         } else if (rootType instanceof Product product) {
-            saveProductImages(product, images);
+            saveProductImages(product, images,false);
         } else {
             throw new IllegalArgumentException("Unsupported ImageRootType: " + rootType.getClass().getName());
         }
     }
 
-    private void saveFarmImages(Farm farm, List<Image> images) {
+    private void saveFarmImages(Farm farm, List<Image> images, Boolean isThumbnail) {
         List<FarmImage> farmImages = IntStream.range(0, images.size())
             .mapToObj(index -> {
                 Image image = images.get(index);
                 Integer sequence = (Integer) (index + 1); // 예시로 sequence를 인덱스 기반으로 설정
                 return FarmImage.builder()
-                    .isThumbnail(false)
+                    .isThumbnail(isThumbnail)
                     .pk(FarmImage.Pk.builder()
                         .farmId(farm.getId())
                         .imageId(image.getId())
                         .build())
-                    .sequence(sequence)  // sequence 값을 설정
+                    .sequence(isThumbnail?0:sequence)  // sequence 값을 설정
                     .build();
             })
             .collect(Collectors.toList());
         farmImageRepository.saveAll(farmImages);
     }
 
-    private void saveProductImages(Product product, List<Image> images) {
+    private void saveProductImages(Product product, List<Image> images, Boolean isThumbnail) {
         List<ProductImage> productImages = IntStream.range(0, images.size())
             .mapToObj(index -> {
                 Image image = images.get(index);
@@ -139,8 +168,8 @@ public class S3Service implements StorageService {
                         .productId(product.getId())
                         .imageId(image.getId())
                         .build())
-                    .sequence(sequence)  // sequence 값을 설정
-                    .isThumbnail(false)
+                    .sequence(isThumbnail?0:sequence)  // sequence 값을 설정
+                    .isThumbnail(isThumbnail)
                     .build();
             })
             .collect(Collectors.toList());
