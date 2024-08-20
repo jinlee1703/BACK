@@ -1,8 +1,8 @@
 package com.wefood.back.global.image.service;
 
-import com.wefood.back.product.dto.UploadImageRequestDto;
+import com.wefood.back.global.image.dto.UploadImageRequestDto;
+import com.wefood.back.global.image.dto.UploadThumbnailRequestDto;
 import java.io.IOException;
-import java.util.List;
 
 /**
  * class: StorageService.
@@ -15,4 +15,6 @@ import java.util.List;
  */
 public interface StorageService {
     void saveImages(UploadImageRequestDto uploadImageRequestDto, String dirName) throws IOException;
+
+    void saveThumbnail(UploadThumbnailRequestDto uploadThumbnail, String dirName) throws IOException;
 }
