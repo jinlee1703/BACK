@@ -117,6 +117,7 @@ public class S3Service implements StorageService {
                 Image image = images.get(index);
                 Integer sequence = (Integer) (index + 1); // 예시로 sequence를 인덱스 기반으로 설정
                 return FarmImage.builder()
+                    .isThumbnail(false)
                     .pk(FarmImage.Pk.builder()
                         .farmId(farm.getId())
                         .imageId(image.getId())

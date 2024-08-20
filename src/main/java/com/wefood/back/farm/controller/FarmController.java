@@ -33,7 +33,6 @@ public class FarmController {
     public void uploadImages(
         @Valid @ModelAttribute UploadImageRequestDto requestDto,
         BindingResult result) {
-
         if (result.hasErrors()) {
             throw new InvalidRequestException(result);
         }
