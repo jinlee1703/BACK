@@ -47,6 +47,11 @@ public class OrderService {
     public ReviewGetResponse findReview(Long id) {
         return reviewRepository.queryById(id);
     }
+    public List<ReviewGetResponse> findProductReview(Long id) {
+        return reviewRepository.queryByProductId(id);
+    }
+
+
 
     public void createOrder(Long userId, DirectOrderCreateRequest orderCreateRequest) {
 

@@ -59,8 +59,16 @@ public class OrderController {
         return new Message<>(200, "리뷰 조회", orderService.findReview(id));
     }
 
+    @GetMapping("/product-review")
+    public Message<List<ReviewGetResponse>> getProductReview(@RequestParam Long id) {
+        return new Message<>(200, "물건 리뷰 조회", orderService.findProductReview(id));
+    }
+
+
+
     @PostMapping("/review")
     @ResponseStatus(HttpStatus.CREATED)
+
     public void createReview(@RequestBody ReviewCreateRequest createRequest, @RequestParam Long orderDetailId) {
 
         orderService.createReview(createRequest, orderDetailId);
