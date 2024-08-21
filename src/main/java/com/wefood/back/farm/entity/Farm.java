@@ -43,6 +43,7 @@ public class Farm implements ImageRootType {
     @Builder
     public Farm(User user, String name, String detail) {
         this.user = user;
+        this.name = name;
         this.detail = detail;
     }
 }
