@@ -1,27 +1,25 @@
 package com.wefood.back.farm.controller;
 
 import com.wefood.back.farm.dto.FarmImageResponse;
-import com.wefood.back.farm.dto.FarmListResponse;
 import com.wefood.back.farm.dto.FarmRequest;
 import com.wefood.back.farm.dto.FarmResponse;
 import com.wefood.back.farm.service.FarmService;
 import com.wefood.back.global.Message;
 import com.wefood.back.global.exception.FileUploadException;
 import com.wefood.back.global.exception.InvalidRequestException;
+import com.wefood.back.global.image.dto.UploadImageRequestDto;
 import com.wefood.back.global.image.dto.UploadThumbnailRequestDto;
 import com.wefood.back.global.image.service.StorageService;
-import com.wefood.back.global.image.dto.UploadImageRequestDto;
 import jakarta.validation.Valid;
-
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * class: FarmController.
@@ -89,7 +87,7 @@ public class FarmController {
     }
 
     @GetMapping
-    public Message<FarmResponse> getFarms(@RequestParam Long id) {
+    public Message<FarmResponse> getFarm(@RequestParam Long id) {
         return new Message<>(200, "농장 조회", farmService.getFarm(id));
     }
 
