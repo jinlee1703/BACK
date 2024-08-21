@@ -1,4 +1,4 @@
-package com.wefood.back.product.dto;
+package com.wefood.back.global.image.dto;
 
 
 import lombok.Builder;
@@ -7,13 +7,13 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class ProductImageDetailResponse {
+public class ImageDetailResponse {
     private String img;
     private Boolean isThumbnail;
     private Integer sequence;
 
     @Builder
-    public ProductImageDetailResponse(String img, Boolean isThumbnail, Integer sequence) {
+    public ImageDetailResponse(String img, Boolean isThumbnail, Integer sequence) {
         this.img = img;
         this.isThumbnail = isThumbnail;
         this.sequence = sequence;

@@ -6,16 +6,12 @@ import com.wefood.back.farm.dto.FarmResponse;
 import com.wefood.back.farm.entity.Farm;
 import com.wefood.back.farm.repository.FarmRepository;
 import com.wefood.back.global.image.repository.FarmImageRepository;
-import com.wefood.back.product.dto.ProductDetailResponse;
-import com.wefood.back.product.dto.ProductImageDetailResponse;
-import com.wefood.back.product.exception.ProductNotFoundException;
 import com.wefood.back.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
