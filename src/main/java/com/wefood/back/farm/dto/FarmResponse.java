@@ -9,7 +9,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class FarmResponse {
     private Long id;
-
     private String name;
-
 }
