@@ -1,6 +1,7 @@
 package com.wefood.back.farm.controller;
 
 import com.wefood.back.farm.dto.FarmImageResponse;
+import com.wefood.back.farm.dto.FarmListResponse;
 import com.wefood.back.farm.dto.FarmRequest;
 import com.wefood.back.farm.dto.FarmResponse;
 import com.wefood.back.farm.service.FarmService;
@@ -100,10 +101,10 @@ public class FarmController {
         return new Message<>(200, "농장 이미지 조회", farmService.getFarmImage(id));
     }
 
-    @GetMapping
-    public ResponseEntity<Message<Page<FarmResponse>>> getFarms(Pageable pageable) {
-        Page<FarmResponse> farms = farmService.getFarms(pageable);
-        Message<Page<FarmResponse>> message = new Message<>(200, "농가 조회 성공", farms);
+    @GetMapping("/list")
+    public ResponseEntity<Message<Page<FarmListResponse>>> getFarms(Pageable pageable) {
+        Page<FarmListResponse> farms = farmService.getFarms(pageable);
+        Message<Page<FarmListResponse>> message = new Message<>(200, "농가 조회 성공", farms);
         return new ResponseEntity<>(message, HttpStatus.OK);
     }
 }

@@ -1,6 +1,7 @@
 package com.wefood.back.farm.service;
 
 import com.wefood.back.farm.dto.FarmImageResponse;
+import com.wefood.back.farm.dto.FarmListResponse;
 import com.wefood.back.farm.dto.FarmRequest;
 import com.wefood.back.farm.dto.FarmResponse;
 import com.wefood.back.farm.entity.Farm;
@@ -30,8 +31,8 @@ public class FarmService {
 
     private final UserRepository userRepository;
 
-    public Page<FarmResponse> getFarms(Pageable pageable) {
-        return farmRepository.findFarmById(pageable);
+    public Page<FarmListResponse> getFarms(Pageable pageable) {
+        return farmRepository.findFarms(pageable);
     }
 
     public void createFarm(FarmRequest farmRequest, Long id) {
