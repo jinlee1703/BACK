@@ -1,20 +1,27 @@
 package com.wefood.back.farm.controller;
 
+import com.wefood.back.farm.dto.FarmImageResponse;
+import com.wefood.back.farm.dto.FarmListResponse;
+import com.wefood.back.farm.dto.FarmRequest;
+import com.wefood.back.farm.dto.FarmResponse;
+import com.wefood.back.farm.service.FarmService;
+import com.wefood.back.global.Message;
 import com.wefood.back.global.exception.FileUploadException;
 import com.wefood.back.global.exception.InvalidRequestException;
 import com.wefood.back.global.image.dto.UploadThumbnailRequestDto;
 import com.wefood.back.global.image.service.StorageService;
 import com.wefood.back.global.image.dto.UploadImageRequestDto;
 import jakarta.validation.Valid;
+
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * class: FarmController.
@@ -27,13 +34,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class FarmController {
     private final StorageService storageService;
+    private final FarmService farmService;
     private final static String DIR_NAME = "farm";
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public void uploadImages(
-        @Valid @ModelAttribute UploadImageRequestDto requestDto,
-        BindingResult result) {
+            @Valid @ModelAttribute UploadImageRequestDto requestDto,
+            BindingResult result) {
         if (result.hasErrors()) {
             throw new InvalidRequestException(result);
         }
@@ -46,10 +54,23 @@ public class FarmController {
     }
 
     @ResponseStatus(HttpStatus.CREATED)
+    @PostMapping("/upload-part")
+    public void uploadImages(
+            @RequestPart("files") MultipartFile[] files, @RequestParam("id") Long id) {
+
+        UploadImageRequestDto uploadImageRequestDto = new UploadImageRequestDto(Arrays.stream(files).toList(), id);
+        try {
+            storageService.saveImages(uploadImageRequestDto, DIR_NAME);
+        } catch (IOException e) {
+            throw new FileUploadException("An error occurred while uploading files.", e);
+        }
+    }
+
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/thumbnail")
     public void uploadThumbnail(
-        @Valid @ModelAttribute UploadThumbnailRequestDto requestDto,
-        BindingResult result) {
+            @Valid @ModelAttribute UploadThumbnailRequestDto requestDto,
+            BindingResult result) {
         if (result.hasErrors()) {
             throw new InvalidRequestException(result);
         }
@@ -59,5 +80,21 @@ public class FarmController {
         } catch (IOException e) {
             throw new FileUploadException("An error occurred while uploading files.", e);
         }
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @PostMapping("/create")
+    public void createFarm(@RequestParam Long id, @RequestBody FarmRequest farmRequest) {
+        farmService.createFarm(farmRequest, id);
+    }
+
+    @GetMapping
+    public Message<FarmResponse> getFarms(@RequestParam Long id) {
+        return new Message<>(200, "농장 조회", farmService.getFarm(id));
+    }
+
+    @GetMapping("/image")
+    public Message<List<FarmImageResponse>> getFarmImage(@RequestParam Long id) {
+        return new Message<>(200, "농장 이미지 조회", farmService.getFarmImage(id));
     }
 }

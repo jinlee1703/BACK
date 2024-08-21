@@ -1,18 +1,5 @@
 package com.wefood.back.farm.dto;
 
-import com.wefood.back.global.image.dto.ImageDetailResponse;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+public record FarmResponse(Long id, String detail, String name) {
 
-import java.util.List;
-
-@Getter
-@NoArgsConstructor
-@AllArgsConstructor
-public class FarmResponse {
-
-    private Long id;
-    private String name;
-    private List<ImageDetailResponse> img;
 }
