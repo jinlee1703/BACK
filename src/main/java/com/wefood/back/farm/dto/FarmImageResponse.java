@@ -1,19 +1,17 @@
-package com.wefood.back.product.dto;
+package com.wefood.back.farm.dto;
 
-
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Getter
+@Setter
 @NoArgsConstructor
-public class ProductImageDetailResponse {
+public class FarmImageResponse {
     private String img;
     private Boolean isThumbnail;
     private Integer sequence;
 
     @Builder
-    public ProductImageDetailResponse(String img, Boolean isThumbnail, Integer sequence) {
+    public FarmImageResponse(String img, Boolean isThumbnail, Integer sequence) {
         this.img = img;
         this.isThumbnail = isThumbnail;
         this.sequence = sequence;
@@ -23,3 +21,5 @@ public class ProductImageDetailResponse {
         this.img = img;
     }
 }
+
+

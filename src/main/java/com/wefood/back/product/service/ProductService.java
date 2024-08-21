@@ -1,8 +1,10 @@
 package com.wefood.back.product.service;
 
+import com.wefood.back.farm.dto.FarmInfoResponse;
+import com.wefood.back.global.image.repository.FarmImageRepository;
 import com.wefood.back.global.image.repository.ProductImageRepository;
 import com.wefood.back.product.dto.ProductDetailResponse;
-import com.wefood.back.product.dto.ProductImageDetailResponse;
+import com.wefood.back.global.image.dto.ImageDetailResponse;
 import com.wefood.back.product.dto.ProductResponse;
 import com.wefood.back.product.exception.CategoryNotFoundException;
 import com.wefood.back.product.exception.ProductNotFoundException;
@@ -22,6 +24,7 @@ public class ProductService {
 
     private static final String imgRoute = "https://s3.ap-northeast-2.amazonaws.com";
     private static final String productURL = "/product/";
+    private static final String farmURL = "/farm/";
     @Value("${cloud.aws.s3.bucketName}")
     private String bucketName;
 
@@ -29,11 +32,13 @@ public class ProductService {
     private final ProductImageRepository productImageRepository;
     private final CategoryRepository categoryRepository;
 
+    private final FarmImageRepository farmImageRepository;
 
-    public ProductService(ProductRepository productRepository, ProductImageRepository productImageRepository, CategoryRepository categoryRepository) {
+    public ProductService(ProductRepository productRepository, ProductImageRepository productImageRepository, CategoryRepository categoryRepository, FarmImageRepository farmImageRepository) {
         this.productRepository = productRepository;
         this.productImageRepository = productImageRepository;
         this.categoryRepository = categoryRepository;
+        this.farmImageRepository = farmImageRepository;
     }
 
     /**
@@ -48,11 +53,21 @@ public class ProductService {
         if (productDetailResponse.isEmpty()) {
             throw new ProductNotFoundException();
         }
-        List<ProductImageDetailResponse> imageByProductId = productImageRepository.findImageByProductId(id);
-        for (ProductImageDetailResponse response : imageByProductId) {
-            response.setName(imgRoute + "/" + bucketName + productURL + id + "/" + response.getImg());
+        List<ImageDetailResponse> productImages = productImageRepository.findImageByProductId(id);
+        for (ImageDetailResponse image : productImages) {
+            image.setName(imgRoute + "/" + bucketName + productURL + id + "/" + image.getImg());
         }
-        productDetailResponse.get().setImg(imageByProductId);
+        productDetailResponse.get().setProductImg(productImages);
+
+        FarmInfoResponse farm = productRepository.findFarmById(id);
+        List<ImageDetailResponse> farmImages = farmImageRepository.findByPk_FarmId(farm.getFarm().getId());
+        for (ImageDetailResponse image : farmImages) {
+            image.setName(imgRoute + "/" + bucketName + farmURL + farm.getFarm().getId() + "/" + image.getImg());
+        }
+        productDetailResponse.get().setFarmImg(farmImages);
+        productDetailResponse.get().setFarmId(farm.getFarm().getId());
+        productDetailResponse.get().setFarmName(farm.getFarm().getName());
+        productDetailResponse.get().setFarmDetail(farm.getFarm().getDetail());
 
         return productDetailResponse.get();
     }

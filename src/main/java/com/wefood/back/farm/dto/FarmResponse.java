@@ -1,13 +1,5 @@
 package com.wefood.back.farm.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+public record FarmResponse(Long id, String detail, String name) {
 
-@Getter
-@NoArgsConstructor
-@AllArgsConstructor
-public class FarmResponse {
-    private Long id;
-    private String name;
 }
