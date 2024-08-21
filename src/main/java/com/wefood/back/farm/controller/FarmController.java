@@ -104,7 +104,7 @@ public class FarmController {
     @GetMapping("/list")
     public ResponseEntity<Message<Page<FarmListResponse>>> getFarms(Pageable pageable) {
         Page<FarmListResponse> farms = farmService.getFarms(pageable);
-        Message<Page<FarmListResponse>> message = new Message<>(200, "농가 조회 성공", farms);
+        Message<Page<FarmListResponse>> message = new Message<>(200, "농가 목록 성공", farms);
         return new ResponseEntity<>(message, HttpStatus.OK);
     }
 }

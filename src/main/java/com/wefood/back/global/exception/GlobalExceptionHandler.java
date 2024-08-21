@@ -1,5 +1,6 @@
 package com.wefood.back.global.exception;
 
+import com.wefood.back.farm.exception.FarmNotFoundException;
 import com.wefood.back.global.Message;
 import com.wefood.back.product.exception.CategoryNotFoundException;
 import com.wefood.back.product.exception.ProductNotFoundException;
@@ -47,7 +48,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(message);
     }
 
-    @ExceptionHandler({ProductNotFoundException.class, CategoryNotFoundException.class, UserNotFoundException.class})
+    @ExceptionHandler({ProductNotFoundException.class, CategoryNotFoundException.class, UserNotFoundException.class, FarmNotFoundException.class})
     public ResponseEntity<Message<String>> handleNotFoundException(RuntimeException e) {
         Message<String> message = new Message<>(404, e.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);

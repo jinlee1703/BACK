@@ -21,7 +21,8 @@ import java.util.List;
 public class FarmService {
 
     private static final String imgRoute = "https://s3.ap-northeast-2.amazonaws.com";
-    private static final String productURL = "/farm/";
+    private static final String farmURL = "/farm/";
+    private static final String productURL = "/product/";
     @Value("${cloud.aws.s3.bucketName}")
     private String bucketName;
 
@@ -32,7 +33,9 @@ public class FarmService {
     private final UserRepository userRepository;
 
     public Page<FarmListResponse> getFarms(Pageable pageable) {
-        return farmRepository.findFarms(pageable);
+        Page<FarmListResponse> farms = farmRepository.findFarms(pageable);
+        farms.forEach(farmListResponse -> farmListResponse.setImg(imgRoute + "/" + bucketName + farmURL + farmListResponse.getId() + "/" + farmListResponse.getImg()));
+        return farms;
     }
 
     public void createFarm(FarmRequest farmRequest, Long id) {
@@ -51,7 +54,7 @@ public class FarmService {
         List<FarmImageResponse> farmImageResponses = farmImageRepository.queryByFarmId(id);
 
         for (FarmImageResponse response : farmImageResponses) {
-            response.setName(imgRoute + "/" + bucketName + productURL + id + "/" + response.getImg());
+            response.setName(imgRoute + "/" + bucketName + farmURL + id + "/" + response.getImg());
         }
         return farmImageResponses;
     }

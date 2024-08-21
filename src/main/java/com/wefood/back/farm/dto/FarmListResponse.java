@@ -11,4 +11,8 @@ public class FarmListResponse {
     private Long id;
     private String name;
     private String img;
+
+    public void setImg(String img) {
+        this.img = img;
+    }
 }
