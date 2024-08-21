@@ -1,5 +1,6 @@
 package com.wefood.back.product.repository;
 
+import com.wefood.back.farm.dto.FarmInfoResponse;
 import com.wefood.back.order.dto.CartProductResponse;
 import com.wefood.back.product.dto.ProductDetailResponse;
 import com.wefood.back.product.dto.ProductResponse;
@@ -21,7 +22,7 @@ import java.util.Optional;
  */
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
-    @Query("select new com.wefood.back.product.dto.ProductDetailResponse(p.id, p.name, p.detail, p.price, f.id, f.name) from Product p inner join Farm f on f.id=p.farm.id where p.id=:productId and p.isStatus=true")
+    @Query("select new com.wefood.back.product.dto.ProductDetailResponse(p.id, p.name, p.detail, p.price, p.item.id) from Product p where p.id=:productId and p.isStatus=true")
     Optional<ProductDetailResponse> findProductDetailByProductId(@Param("productId") Long productId);
 
     @Query("select new com.wefood.back.product.dto.ProductResponse(p.id, p.name, p.price, i.name) from Product p inner join ProductImage pi on pi.pk.productId=p.id inner join Image i on pi.pk.imageId=i.id where pi.isThumbnail=true and p.isStatus=true order by p.id desc limit 4")
@@ -38,4 +39,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Query("select new com.wefood.back.order.dto.CartProductResponse(p.id, p.name, p.price, i.name, c.quantity) from Product p inner join Cart c on c.pk.productId=p.id inner join ProductImage pi on pi.pk.productId=p.id inner join Image i on pi.pk.imageId=i.id where c.pk.userId=:userId and pi.isThumbnail=true and p.isStatus=true")
     List<CartProductResponse> findCartProductByUserId(@Param("userId") Long userId);
+
+    FarmInfoResponse findFarmById(Long productId);
 }
