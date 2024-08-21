@@ -3,13 +3,8 @@ package com.wefood.back.farm.dto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Getter
-@NoArgsConstructor
-@AllArgsConstructor
-public class FarmResponse {
-    private Long id;
-
-    private String name;
+public record FarmResponse(Long id, String detail, String name) {
 
 }
