@@ -11,6 +11,7 @@ import com.wefood.back.global.exception.InvalidRequestException;
 import com.wefood.back.global.image.dto.UploadImageRequestDto;
 import com.wefood.back.global.image.dto.UploadThumbnailRequestDto;
 import com.wefood.back.global.image.service.StorageService;
+import com.wefood.back.product.dto.ProductResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -105,6 +106,20 @@ public class FarmController {
     public ResponseEntity<Message<Page<FarmListResponse>>> getFarms(Pageable pageable) {
         Page<FarmListResponse> farms = farmService.getFarms(pageable);
         Message<Page<FarmListResponse>> message = new Message<>(200, "농가 목록 성공", farms);
+        return new ResponseEntity<>(message, HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Message<FarmResponse>> getFarmById(@PathVariable("id") Long id) {
+        FarmResponse response = farmService.getFarmById(id);
+        Message<FarmResponse> message = new Message<>(200, "농가 조회 성공", response);
+        return new ResponseEntity<>(message, HttpStatus.OK);
+    }
+
+    @GetMapping("/{farmId}/product")
+    public ResponseEntity<Message<Page<ProductResponse>>> getProductsByFarm(@PathVariable("farmId") Long farmId, Pageable pageable) {
+        Page<ProductResponse> products = farmService.getProductsByFarm(farmId, pageable);
+        Message<Page<ProductResponse>> message = new Message<>(200, "상품 조회 성공", products);
         return new ResponseEntity<>(message, HttpStatus.OK);
     }
 }

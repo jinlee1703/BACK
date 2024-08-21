@@ -22,4 +22,6 @@ public interface FarmRepository extends JpaRepository<Farm, Long> {
 
     @Query("select new com.wefood.back.farm.dto.FarmListResponse(f.id, f.name, i.name) from Farm f inner join FarmImage fi on fi.pk.farmId=f.id inner join Image i on i.id=fi.pk.imageId where fi.isThumbnail=true")
     Page<FarmListResponse> findFarms(Pageable pageable);
+
+    FarmResponse findFarmById(Long id);
 }

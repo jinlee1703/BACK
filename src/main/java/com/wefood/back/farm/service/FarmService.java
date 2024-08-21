@@ -5,8 +5,11 @@ import com.wefood.back.farm.dto.FarmListResponse;
 import com.wefood.back.farm.dto.FarmRequest;
 import com.wefood.back.farm.dto.FarmResponse;
 import com.wefood.back.farm.entity.Farm;
+import com.wefood.back.farm.exception.FarmNotFoundException;
 import com.wefood.back.farm.repository.FarmRepository;
 import com.wefood.back.global.image.repository.FarmImageRepository;
+import com.wefood.back.product.dto.ProductResponse;
+import com.wefood.back.product.repository.ProductRepository;
 import com.wefood.back.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,6 +34,7 @@ public class FarmService {
     private final FarmRepository farmRepository;
 
     private final UserRepository userRepository;
+    private final ProductRepository productRepository;
 
     public Page<FarmListResponse> getFarms(Pageable pageable) {
         Page<FarmListResponse> farms = farmRepository.findFarms(pageable);
@@ -66,5 +70,22 @@ public class FarmService {
         }
 
         return null;
+    }
+
+    public FarmResponse getFarmById(Long id) {
+        if (farmRepository.existsById(id)) {
+            return farmRepository.findFarmById(id);
+        }
+
+        throw new FarmNotFoundException();
+    }
+
+    public Page<ProductResponse> getProductsByFarm(Long farmId, Pageable pageable) {
+        if (!farmRepository.existsById(farmId)) {
+            throw new FarmNotFoundException();
+        }
+        Page<ProductResponse> products = productRepository.findProductByFarm_Id(farmId, pageable);
+        products.forEach(productResponse -> productResponse.setImg(imgRoute + "/" + bucketName + productURL + productResponse.getId() + "/" + productResponse.getImg()));
+        return products;
     }
 }
