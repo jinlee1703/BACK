@@ -11,6 +11,7 @@ import com.wefood.back.global.image.repository.FarmImageRepository;
 import com.wefood.back.product.dto.ProductResponse;
 import com.wefood.back.product.repository.ProductRepository;
 import com.wefood.back.user.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
+@Transactional
 public class FarmService {
 
     @Value("${wefood.config.image.address}")

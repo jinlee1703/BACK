@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@jakarta.transaction.Transactional
 public class ProductService {
 
     @Value("${wefood.config.image.address}")

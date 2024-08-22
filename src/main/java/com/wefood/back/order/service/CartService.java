@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
+@jakarta.transaction.Transactional
 public class CartService {
 
 
