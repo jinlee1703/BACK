@@ -20,14 +20,16 @@ import java.util.List;
 @Service
 public class CartService {
 
+
+    @Value("${wefood.config.image.address}")
+    private String imgRoute;
+    @Value("${wefood.config.image.productURL}")
+    private String productURL;
+    private final String slash = "/";
+
     private final CartRepository cartRepository;
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
-
-    private static final String imgRoute = "https://s3.ap-northeast-2.amazonaws.com";
-    private static final String productURL = "/product/";
-    @Value("${cloud.aws.s3.bucketName}")
-    private String bucketName;
 
     public CartService(CartRepository cartRepository, ProductRepository productRepository, UserRepository userRepository) {
         this.cartRepository = cartRepository;
@@ -42,7 +44,7 @@ public class CartService {
         }
         List<CartProductResponse> products = productRepository.findCartProductByUserId(userId);
         for (CartProductResponse product : products) {
-            product.setThumbnail(imgRoute + "/" + bucketName + productURL + product.getId() + "/" + product.getThumbnail());
+            product.setThumbnail(imgRoute + productURL + product.getId() + slash + product.getThumbnail());
         }
 
         return products;

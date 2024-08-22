@@ -20,14 +20,15 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class FarmService {
 
-    private static final String imgRoute = "https://s3.ap-northeast-2.amazonaws.com";
-    private static final String farmURL = "/farm/";
-    private static final String productURL = "/product/";
-    @Value("${cloud.aws.s3.bucketName}")
-    private String bucketName;
+    @Value("${wefood.config.image.address}")
+    private String imgRoute;
+    @Value("${wefood.config.image.productURL}")
+    private String productURL;
+    @Value("${wefood.config.image.farmURL}")
+    private String farmURL;
+    private final String slash = "/";
 
     private final FarmImageRepository farmImageRepository;
 
@@ -36,9 +37,16 @@ public class FarmService {
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
 
+    public FarmService(FarmImageRepository farmImageRepository, FarmRepository farmRepository, UserRepository userRepository, ProductRepository productRepository) {
+        this.farmImageRepository = farmImageRepository;
+        this.farmRepository = farmRepository;
+        this.userRepository = userRepository;
+        this.productRepository = productRepository;
+    }
+
     public Page<FarmListResponse> getFarms(Pageable pageable) {
         Page<FarmListResponse> farms = farmRepository.findFarms(pageable);
-        farms.forEach(farmListResponse -> farmListResponse.setImg(imgRoute + "/" + bucketName + farmURL + farmListResponse.getId() + "/" + farmListResponse.getImg()));
+        farms.forEach(farmListResponse -> farmListResponse.setImg(imgRoute + farmURL + slash + farmListResponse.getId() + slash + farmListResponse.getImg()));
         return farms;
     }
 
@@ -58,7 +66,7 @@ public class FarmService {
         List<FarmImageResponse> farmImageResponses = farmImageRepository.queryByFarmId(id);
 
         for (FarmImageResponse response : farmImageResponses) {
-            response.setName(imgRoute + "/" + bucketName + farmURL + id + "/" + response.getImg());
+            response.setName(imgRoute + farmURL + slash + id + slash + response.getImg());
         }
         return farmImageResponses;
     }
@@ -85,7 +93,7 @@ public class FarmService {
             throw new FarmNotFoundException();
         }
         Page<ProductResponse> products = productRepository.findProductByFarm_Id(farmId, pageable);
-        products.forEach(productResponse -> productResponse.setImg(imgRoute + "/" + bucketName + productURL + productResponse.getId() + "/" + productResponse.getImg()));
+        products.forEach(productResponse -> productResponse.setImg(imgRoute + productURL + slash + productResponse.getId() + slash + productResponse.getImg()));
         return products;
     }
 }
