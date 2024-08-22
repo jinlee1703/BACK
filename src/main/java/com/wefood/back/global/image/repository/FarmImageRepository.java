@@ -21,8 +21,6 @@ public interface FarmImageRepository extends JpaRepository<FarmImage, Pk> {
     @Query("select new com.wefood.back.farm.dto.FarmImageResponse(i.name, pi.isThumbnail, pi.sequence) from Image i inner join FarmImage pi on i.id=pi.pk.imageId where pi.pk.farmId=:farmId")
     List<FarmImageResponse> queryByFarmId(Long farmId);
 
-
-
     @Query("select new com.wefood.back.global.image.dto.ImageDetailResponse(i.name, fi.isThumbnail, fi.sequence) from FarmImage fi inner join Image i on i.id=fi.pk.imageId where fi.pk.farmId=:farmId")
     List<ImageDetailResponse> findByPk_FarmId(@Param("farmId") Long farmId);
 }

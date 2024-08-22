@@ -41,4 +41,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     List<CartProductResponse> findCartProductByUserId(@Param("userId") Long userId);
 
     FarmInfoResponse findFarmById(Long productId);
+
+    @Query("select new com.wefood.back.product.dto.ProductResponse(p.id, p.name, p.price, i.name) from Product p inner join ProductImage pi on pi.pk.productId=p.id inner join Image i on pi.pk.imageId=i.id where p.farm.id=:farmId and pi.isThumbnail=true and p.isStatus=true")
+    Page<ProductResponse> findProductByFarm_Id(Long farmId, Pageable pageable);
 }

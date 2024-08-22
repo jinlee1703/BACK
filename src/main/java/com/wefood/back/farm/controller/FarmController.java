@@ -1,6 +1,7 @@
 package com.wefood.back.farm.controller;
 
 import com.wefood.back.farm.dto.FarmImageResponse;
+import com.wefood.back.farm.dto.FarmListResponse;
 import com.wefood.back.farm.dto.FarmRequest;
 import com.wefood.back.farm.dto.FarmResponse;
 import com.wefood.back.farm.service.FarmService;
@@ -10,9 +11,13 @@ import com.wefood.back.global.exception.InvalidRequestException;
 import com.wefood.back.global.image.dto.UploadImageRequestDto;
 import com.wefood.back.global.image.dto.UploadThumbnailRequestDto;
 import com.wefood.back.global.image.service.StorageService;
+import com.wefood.back.product.dto.ProductResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -31,8 +36,9 @@ import java.util.List;
 @RequestMapping("/api/farm")
 @RequiredArgsConstructor
 public class FarmController {
-    private final StorageService storageService;
+
     private final FarmService farmService;
+    private final StorageService storageService;
     private final static String DIR_NAME = "farm";
 
     @ResponseStatus(HttpStatus.CREATED)
@@ -94,5 +100,26 @@ public class FarmController {
     @GetMapping("/image")
     public Message<List<FarmImageResponse>> getFarmImage(@RequestParam Long id) {
         return new Message<>(200, "농장 이미지 조회", farmService.getFarmImage(id));
+    }
+
+    @GetMapping("/list")
+    public ResponseEntity<Message<Page<FarmListResponse>>> getFarms(Pageable pageable) {
+        Page<FarmListResponse> farms = farmService.getFarms(pageable);
+        Message<Page<FarmListResponse>> message = new Message<>(200, "농가 목록 성공", farms);
+        return new ResponseEntity<>(message, HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Message<FarmResponse>> getFarmById(@PathVariable("id") Long id) {
+        FarmResponse response = farmService.getFarmById(id);
+        Message<FarmResponse> message = new Message<>(200, "농가 조회 성공", response);
+        return new ResponseEntity<>(message, HttpStatus.OK);
+    }
+
+    @GetMapping("/{farmId}/product")
+    public ResponseEntity<Message<Page<ProductResponse>>> getProductsByFarm(@PathVariable("farmId") Long farmId, Pageable pageable) {
+        Page<ProductResponse> products = farmService.getProductsByFarm(farmId, pageable);
+        Message<Page<ProductResponse>> message = new Message<>(200, "상품 조회 성공", products);
+        return new ResponseEntity<>(message, HttpStatus.OK);
     }
 }

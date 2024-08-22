@@ -22,11 +22,13 @@ import java.util.Optional;
 @Service
 public class ProductService {
 
-    private static final String imgRoute = "https://s3.ap-northeast-2.amazonaws.com";
-    private static final String productURL = "/product/";
-    private static final String farmURL = "/farm/";
-    @Value("${cloud.aws.s3.bucketName}")
-    private String bucketName;
+    @Value("${wefood.config.image.address}")
+    private String imgRoute;
+    @Value("${wefood.config.image.productURL}")
+    private String productURL;
+    @Value("${wefood.config.image.farmURL}")
+    private String farmURL;
+    private final String slash = "/";
 
     private final ProductRepository productRepository;
     private final ProductImageRepository productImageRepository;
@@ -55,14 +57,14 @@ public class ProductService {
         }
         List<ImageDetailResponse> productImages = productImageRepository.findImageByProductId(id);
         for (ImageDetailResponse image : productImages) {
-            image.setName(imgRoute + "/" + bucketName + productURL + id + "/" + image.getImg());
+            image.setName(imgRoute + productURL + slash + id + slash + image.getImg());
         }
         productDetailResponse.get().setProductImg(productImages);
 
         FarmInfoResponse farm = productRepository.findFarmById(id);
         List<ImageDetailResponse> farmImages = farmImageRepository.findByPk_FarmId(farm.getFarm().getId());
         for (ImageDetailResponse image : farmImages) {
-            image.setName(imgRoute + "/" + bucketName + farmURL + farm.getFarm().getId() + "/" + image.getImg());
+            image.setName(imgRoute + farmURL + slash + farm.getFarm().getId() + slash + image.getImg());
         }
         productDetailResponse.get().setFarmImg(farmImages);
         productDetailResponse.get().setFarmId(farm.getFarm().getId());
@@ -81,7 +83,7 @@ public class ProductService {
     public List<ProductResponse> getProducts() {
         List<ProductResponse> products = productRepository.findTop4ByOrderByIdDesc();
         for (ProductResponse product : products) {
-            product.setImg(imgRoute + "/" + bucketName + productURL + product.getId() + "/" + product.getImg());
+            product.setImg(imgRoute + productURL + slash + product.getId() + slash + product.getImg());
         }
         return products;
     }
@@ -101,7 +103,7 @@ public class ProductService {
 
         Page<ProductResponse> products = productRepository.findProductByCategoryId(categoryId, pageable);
         for (ProductResponse product : products) {
-            product.setImg(imgRoute + "/" + bucketName + productURL + product.getId() + "/" + product.getImg());
+            product.setImg(imgRoute + productURL + slash + product.getId() + slash + product.getImg());
         }
         return products;
     }
@@ -110,7 +112,7 @@ public class ProductService {
     public Page<ProductResponse> getProductBySearch(String search, Pageable pageable) {
         Page<ProductResponse> products = productRepository.findByNameLike(search, pageable);
         for (ProductResponse product : products) {
-            product.setImg(imgRoute + "/" + bucketName + productURL + product.getId() + "/" + product.getImg());
+            product.setImg(imgRoute + productURL + slash + product.getId() + slash + product.getImg());
         }
 
         return products;
@@ -120,7 +122,7 @@ public class ProductService {
     public Page<ProductResponse> getProductByTag(String search, Pageable pageable) {
         Page<ProductResponse> products = productRepository.findByTag(search.replace("#", ""), pageable);
         for (ProductResponse product : products) {
-            product.setImg(imgRoute + "/" + bucketName + productURL + product.getId() + "/" + product.getImg());
+            product.setImg(imgRoute + productURL + slash + product.getId() + slash + product.getImg());
         }
 
         return products;
