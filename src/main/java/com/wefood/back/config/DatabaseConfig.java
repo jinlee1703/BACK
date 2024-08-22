@@ -15,17 +15,6 @@ import org.springframework.transaction.PlatformTransactionManager;
 import javax.sql.DataSource;
 import java.util.Properties;
 
-/**
- * packageName    : store.mybooks.resource.config
- * fileName       : DatabaseConfig
- * author         : Fiat_lux
- * date           : 2/20/24
- * description    :
- * ===========================================================
- * DATE              AUTHOR             NOTE
- * -----------------------------------------------------------
- * 2/20/24        Fiat_lux       최초 생성
- */
 @Configuration
 public class DatabaseConfig {
     private final DatabaseProperties databaseProperties;
@@ -82,6 +71,8 @@ public class DatabaseConfig {
         jpaProperties.setProperty("hibernate.use_sql_comments", "true");
         jpaProperties.setProperty("hibernate.globally_quoted_identifiers", "true");
         jpaProperties.setProperty("hibernate.temp.use_jdbc_metadata_defaults", "false");
+        jpaProperties.setProperty("hibernate.physical_naming_strategy",
+                "org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy");
 
         return jpaProperties;
     }
